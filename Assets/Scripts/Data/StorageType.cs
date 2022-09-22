@@ -1,3 +1,5 @@
+using System;
+[Serializable]
 public enum UI
 {
     StartUI,
@@ -5,27 +7,42 @@ public enum UI
     WeaponShopUI,
 }
 
+[Serializable]
+public enum ItemType
+{
+    Weapon,
+    Hat,
+    Pant,
+    Shield,
+    SkinCombo,
+}
+
+[Serializable]
 public enum HatType
 {
     
 }
-
+[Serializable]
 public enum PantType
 {
     
 }
-
-public enum SkinType
+[Serializable]
+public enum SkinComboType
 {
     
 }
-
+[Serializable]
 public enum ShieldType
 {
-    
+    Vabranium,
+    UnBroken,
 }
-
-public enum WeaponType
+[Serializable]
+public enum WeaponType:int
 {
-    
+    Hammer=1,
+    Knife=2,
+    TripleKnife=3,
+    Bommerang=4,
 }

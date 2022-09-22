@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -5,41 +6,86 @@ using UnityEngine;
 
 public class DataController:MonoBehaviour
 {
-    [SerializeField] private DynamicData dynamicData;
-
     [SerializeField] private StaticData staticData;
-
-    public StaticData StaticData
+    [SerializeField] private DynamicData dynamicData;
+    private Dictionary<ItemType, GameObject[]> itemsPrefabs = new Dictionary<ItemType, GameObject[]>();
+    public DynamicData DynamicData
     {
         get
         {
-            return staticData;
+            if (dynamicData == null)
+            {
+                LoadData();
+            }
+            return dynamicData;
         }
     }
-    //
-    private string path;
     private string persistentPath = "";
-    //
-    
+    private void Awake()
+    {
+        Init();
+        /*
+        WriteData();
+        */
+        LoadData();
+    }
     private void Init()
     {
-        path = Application.dataPath
-                   + Path.AltDirectorySeparatorChar + FixVariable.DATA;
         persistentPath = Application.persistentDataPath
-                         + Path.AltDirectorySeparatorChar + FixVariable.DATA;
+                         +FixVariable.DATA_PATH;
+    }
+    #region WriteAndReadJsonFile
+
+    private void LoadData()
+    {
+        if (File.Exists(persistentPath))
+        {
+            string json = File.ReadAllText(persistentPath);
+            DynamicData data = JsonUtility.FromJson<DynamicData>(json);
+            this.dynamicData = data;
+            Debug.Log(data.OwnHats.Count);
+        }
+        else
+        {
+            dynamicData = new DynamicData();
+        }
     }
 
-    public void LoadData()
+    private void WriteData()
     {
-        StreamReader reader = new StreamReader(path);
-        string json = reader.ReadToEnd();
-        DynamicData data = JsonUtility.FromJson<DynamicData>(json);
-        this.dynamicData = data;
+        File.WriteAllText(persistentPath,JsonUtility.ToJson(dynamicData));
     }
 
-    public void WriteData()
+    #endregion
+
+
+    private Dictionary<WeaponType, Item> weapons=new Dictionary<WeaponType, Item>();
+
+    public void GetPlayerWeapon()
     {
-        StreamWriter writer = new StreamWriter(path);
-        writer.Write(JsonUtility.ToJson(dynamicData));
+        
+    }
+
+    public Item GetWeapon(WeaponType weaponType)
+    {
+        var weapons = GetItems(ItemType.Weapon);
+        return weapons[(int)(weaponType)];
+    }
+    
+    
+    public Item[] GetItems(ItemType itemType)
+    {
+        switch (itemType)
+        {
+            case ItemType.Weapon:
+                return staticData.Weapons;
+            case ItemType.Pant:
+                return staticData.Pants;    
+            case ItemType.Hat:
+                return staticData.Hats;
+            case ItemType.Shield:
+                return staticData.Shields;
+        }
+        return null;
     }
 }

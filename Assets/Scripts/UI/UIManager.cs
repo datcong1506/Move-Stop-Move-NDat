@@ -17,13 +17,17 @@ public class UIManager : Singleton<UIManager>
 
     public GameObject InstanceUI(UI uIId)
     {
-        GameObject uiPrefab = GameManager.Instance.DataController.StaticData.GetUIPrefab(uIId);
+        GameObject uiPrefab = GetUIPrefab(uIId);
         GameObject rs = null;
         if (uiPrefab != null)
         {
             rs = Instantiate(uiPrefab, selfTransform);
         }
         return rs;
+    }
+    public GameObject GetUIPrefab(UI uIID)
+    {
+        return Resources.Load("UI/" + uIID.ToString()) as GameObject;
     }
     public void LoadUI(UI uIId)
     {

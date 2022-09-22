@@ -6,52 +6,49 @@ using System;
 
 
 [Serializable]
-public class Skin
+public class Items
 {
-    public GameObject PreviewPrefab;
-    public GameObject SkinPrefab;
-    public int Value;
-    public string Des;
-}
-
-[Serializable]
-public class Weapon
-{
-    public GameObject WeaponPrefab;
-    public GameObject PreviewPrefab;
+    public ItemType ItemType;
+    public Item[] Item;
 }
 
 
 [Serializable]
+public class Item
+{
+    public PreviewItem PreviewItem;
+    public WorldItem WorldItem;
+}
+
+[Serializable]
+public class PreviewItem
+{
+    public GameObject PreviewPrefab;
+}
+
+[Serializable]
+public class WorldItem
+{
+    public GameObject WorldPrefab;
+}
+
+        [Serializable]
 [CreateAssetMenu(fileName = "StaticData", menuName = "Data/StaticData")]
 public class StaticData:ScriptableObject
 {
-    [Header("UIPrefab")]
-    [SerializeField] private GameObject startUIPrefab;
-    [SerializeField] private GameObject skinShopUIPrefab;
-    [SerializeField] private GameObject weaponShopUIPrefab;
-
-    [Header("Skin")]
-    [SerializeField] private Skin[] Skins;
-    [Header("Hat")]
-    [SerializeField] private Skin[] Hats;
-    [Header("Pant")]
-    [SerializeField] private Skin[] Pants;
-    [Header("Shield")]
-    [SerializeField] private Skin[] Shields;
-
-    public GameObject GetUIPrefab(UI uIId)
-    {
-        GameObject rs = null;
-        switch (uIId)
-        {
-            case UI.StartUI:
-                rs = startUIPrefab;
-                break;
-            case UI.SkinShopUI:
-                rs = skinShopUIPrefab;
-                break;
-        }
-        return rs;
-    }
+    [Header("Weapon")] 
+    [SerializeField] private Item[] weapons;
+    public Item[] Weapons => weapons;
+    [Header("Pant")] 
+    [SerializeField] private Item[] pants;
+    public Item[] Pants => pants;
+    [Header("Hat")] 
+    [SerializeField] private Item[] hats;
+    public Item[] Hats => hats;
+    [Header("Shield")] 
+    [SerializeField] private Item[] shields;
+    public Item[] Shields => shields;
+    [Header("SkinCombo")] [SerializeField]
+    private Item[] skinCombos;
+    public Item[] SkinCombos => skinCombos;
 }

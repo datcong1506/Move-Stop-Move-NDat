@@ -8,45 +8,84 @@ using UnityEngine.Events;
 
 public class PlayerController : CharacterController
 {
+    [Header("Movement")]
     [SerializeField] private PlayerInputController playerInputController;
     private Transform mainCamTransform;
     [SerializeField] private Transform selfTransform;
     private float rotateSpeed;
     [SerializeField] private float rotateSmoothTime = 0.1f;
     private bool canChangeState;
-    private CharacterState playerState;
-    private void Awake()
+
+    #region Canxoa
+
+    [Header("test")] 
+    [SerializeField] private GameObject hammerWeaponPrefab;
+    
+
+    #endregion
+    
+    
+    protected override void Awake()
     {
+        base.Awake();
         Init();
     }
-
     protected override void Init()
     {
-        speed = FixVariable.CHARACTER_SPEED;
+        base.Init();
         mainCamTransform = CameraController.Instance.MainCam.transform;
-        playerState=CharacterState.Idle;
     }
-
+    protected override WeaponController GetCharacterWeapon()
+    {
+        var newWp = Instantiate(hammerWeaponPrefab)
+            .GetComponent<WeaponController>();
+        newWp.Init(gameObject,weaponHolderTF);
+        return newWp;
+    }
     protected override void DeSpawn()
     {
         
     }
-
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+        ChangeStateHandle();
         Move();
     }
-
-    private void StateActionHandle(){
-        switch(playerState){
+    private void ChangeStateHandle()
+    {
+        //moveinput
+        var playerInput = playerInputController.direc;
+        playerInput = playerInput.normalized;
+        //
+        switch(CharacterState){
             case CharacterState.Idle:
-                
+                if (CanAttack())
+                {
+                    target = FindNearestTarget();
+                    CharacterState = CharacterState.Attack;
+                    break;
+                }
+                if (playerInput.magnitude > 0.1f)
+                {
+                    //transistion to run state
+                    CharacterState = CharacterState.Move;
+                }
+                break;
+            case CharacterState.Move:
+                if (playerInput.magnitude <= 0.1f)
+                {
+                    //transistion to idle state
+                    CharacterState = CharacterState.Idle;
+                }
                 break;
         }
+        
     }
-
     protected override void Move()
     {
+        if(CharacterState!=CharacterState.Move) return;
+        
         //player input
         var moveInput = playerInputController.direc;
         moveInput = moveInput.normalized;
@@ -58,19 +97,13 @@ public class PlayerController : CharacterController
                 rotateSmoothTime);
             selfTransform.rotation = Quaternion.Euler(0, angle, 0);
             var moveDirec = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
-            navMesh.Move(moveDirec*speed*Time.deltaTime);
-            ChangeAnimation(FixVariable.RUN_PARAM);
+            navMesh.Move(moveDirec * speed * Time.deltaTime);
         }
     }
-
-    protected override void Attack()
+    // be called by animation Event (attack clip)
+    public override void Attack()
     {
-    }
-
-    protected override void OnBeHit()
-    {
+        base.Attack();
         
     }
-
-    
 }

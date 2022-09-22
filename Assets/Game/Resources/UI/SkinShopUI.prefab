@@ -3420,7 +3420,7 @@ GameObject:
   - component: {fileID: -2620528913443474546}
   - component: {fileID: 4894755568467883451}
   m_Layer: 16
-  m_Name: SkinShop
+  m_Name: SkinShopUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
