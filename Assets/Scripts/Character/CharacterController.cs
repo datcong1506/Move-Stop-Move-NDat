@@ -2,6 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
+
+public enum CharacterState
+{
+    Init,// just do nothing
+    Idle,
+    Move,
+    Dance,
+    Die
+}
+
 public abstract class CharacterController : StateController
 {
     [Header("Movement")]

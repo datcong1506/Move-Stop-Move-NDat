@@ -4,13 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum PlayerState
-{
-    Idle,
-    Move,
-    Dance,
-    Die
-}
+
 
 public class PlayerController : CharacterController
 {
@@ -20,8 +14,7 @@ public class PlayerController : CharacterController
     private float rotateSpeed;
     [SerializeField] private float rotateSmoothTime = 0.1f;
     private bool canChangeState;
-
-
+    private CharacterState playerState;
     private void Awake()
     {
         Init();
@@ -31,6 +24,7 @@ public class PlayerController : CharacterController
     {
         speed = FixVariable.CHARACTER_SPEED;
         mainCamTransform = CameraController.Instance.MainCam.transform;
+        playerState=CharacterState.Idle;
     }
 
     protected override void DeSpawn()
@@ -43,6 +37,13 @@ public class PlayerController : CharacterController
         Move();
     }
 
+    private void StateActionHandle(){
+        switch(playerState){
+            case CharacterState.Idle:
+                
+                break;
+        }
+    }
 
     protected override void Move()
     {
@@ -58,7 +59,7 @@ public class PlayerController : CharacterController
             selfTransform.rotation = Quaternion.Euler(0, angle, 0);
             var moveDirec = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             navMesh.Move(moveDirec * speed * Time.deltaTime);
-            
+            ChangeAnimation(FixVariable.RUN_PARAM);
         }
     }
 

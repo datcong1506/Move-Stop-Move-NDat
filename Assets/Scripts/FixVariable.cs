@@ -10,4 +10,12 @@ public static class FixVariable
     //string
     public const string DATA = "GameData";
 
+    //character anim param
+    public const string IDLE_PARAM="Idle";
+    public const string RUN_PARAM="Run";
+    public const string DANCE_PARAM="Dance";
+    public const string DIE_PARAM="Die";
+    public const string ATTACK_PARAM="Attack";
+
+
 }
