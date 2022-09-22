@@ -14,7 +14,7 @@ public class PlayerController : CharacterController
     private float rotateSpeed;
     [SerializeField] private float rotateSmoothTime = 0.1f;
     private bool canChangeState;
-    private CharacterState playerState;
+    
     private void Awake()
     {
         Init();
@@ -24,8 +24,11 @@ public class PlayerController : CharacterController
     {
         speed = FixVariable.CHARACTER_SPEED;
         mainCamTransform = CameraController.Instance.MainCam.transform;
-        playerState=CharacterState.Idle;
+        CharacterState=CharacterState.Idle;
+        weaponController = GetCharacterWeapon();
     }
+
+    
 
     protected override void DeSpawn()
     {
@@ -34,19 +37,44 @@ public class PlayerController : CharacterController
 
     private void Update()
     {
+        ChangeStateByInputHandle();
+        AttackHandle();
         Move();
     }
 
-    private void StateActionHandle(){
-        switch(playerState){
+    private void ChangeStateByInputHandle(){
+        var playerInput = playerInputController.direc;
+        playerInput = playerInput.normalized;
+        switch(CharacterState){
             case CharacterState.Idle:
                 
+                if (playerInput.magnitude > 0.1f)
+                {
+                    //transistion to run state
+                    CharacterState = CharacterState.Move;
+                }
+                break;
+            case CharacterState.Move:
+                if (playerInput.magnitude <= 0.1f)
+                {
+                    //transistion to idle state
+                    CharacterState = CharacterState.Idle;
+                }
                 break;
         }
     }
 
+    private void AttackHandle()
+    {
+        
+    }
+
+    
+
     protected override void Move()
     {
+        if(CharacterState!=CharacterState.Move) return;
+        
         //player input
         var moveInput = playerInputController.direc;
         moveInput = moveInput.normalized;
@@ -59,14 +87,15 @@ public class PlayerController : CharacterController
             selfTransform.rotation = Quaternion.Euler(0, angle, 0);
             var moveDirec = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             navMesh.Move(moveDirec * speed * Time.deltaTime);
-            ChangeAnimation(FixVariable.RUN_PARAM);
         }
     }
-
-    protected override void Attack()
+    
+    
+    // animation event
+    public override void Attack()
     {
     }
-
+    
     protected override void OnBeHit()
     {
         
