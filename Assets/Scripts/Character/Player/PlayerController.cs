@@ -58,7 +58,7 @@ public class PlayerController : CharacterController
                 rotateSmoothTime);
             selfTransform.rotation = Quaternion.Euler(0, angle, 0);
             var moveDirec = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
-            navMesh.Move(moveDirec * speed * Time.deltaTime);
+            navMesh.Move(moveDirec*speed*Time.deltaTime);
             ChangeAnimation(FixVariable.RUN_PARAM);
         }
     }
