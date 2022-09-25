@@ -5,7 +5,8 @@ using UnityEngine;
 public static class FixVariable
 {
     public const float CHARACTER_SPEED = 5f;
-    
+
+    public const float AI_MINDISTANCE_TOPLAYER = 5f;
     //string
     public const string DATA_PATH = "/GameData.json";
 
@@ -15,6 +16,10 @@ public static class FixVariable
     public const string DANCE_PARAM="Dance";
     public const string DIE_PARAM="Die";
     public const string ATTACK_PARAM="Attack";
-
-
+    
+    
+    //pauseUI anim param
+    public const string VIB = "Vib";
+    public const string SOUND = "Sound";
+    public const string OPENSETTING = "OpenSetting";
 }

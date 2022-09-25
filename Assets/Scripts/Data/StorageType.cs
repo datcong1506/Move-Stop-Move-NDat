@@ -5,12 +5,16 @@ public enum UI
     StartUI,
     SkinShopUI,
     WeaponShopUI,
+    InGameUI,
+    PauseUI,
+    SettingMenuUI,
+    RevivalUI,
+    LoseUI,
+    WinUI,
 }
 
-[Serializable]
-public enum ItemType
+public enum SkinType
 {
-    Weapon,
     Hat,
     Pant,
     Shield,
@@ -18,31 +22,17 @@ public enum ItemType
 }
 
 [Serializable]
-public enum HatType
-{
-    
-}
-[Serializable]
-public enum PantType
-{
-    
-}
-[Serializable]
-public enum SkinComboType
-{
-    
-}
-[Serializable]
-public enum ShieldType
-{
-    Vabranium,
-    UnBroken,
-}
-[Serializable]
 public enum WeaponType:int
 {
     Hammer=1,
     Knife=2,
     TripleKnife=3,
     Bommerang=4,
+}
+
+[Serializable]
+public enum WeaponSkinType
+{
+    Custom,
+    Normal,
 }

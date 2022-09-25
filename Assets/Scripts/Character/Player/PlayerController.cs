@@ -8,19 +8,18 @@ using UnityEngine.Events;
 
 public class PlayerController : CharacterController
 {
-    [Header("Movement")]
+
+    [Header("Movement")] [SerializeField] private GameObject inputCanvasGO;
     [SerializeField] private PlayerInputController playerInputController;
     private Transform mainCamTransform;
     [SerializeField] private Transform selfTransform;
     private float rotateSpeed;
     [SerializeField] private float rotateSmoothTime = 0.1f;
     private bool canChangeState;
-
+    
     #region Canxoa
 
-    [Header("test")] 
-    [SerializeField] private GameObject hammerWeaponPrefab;
-    
+ 
 
     #endregion
     
@@ -28,24 +27,39 @@ public class PlayerController : CharacterController
     protected override void Awake()
     {
         base.Awake();
-        Init();
+        CameraController.Instance.SetFollowCam(selfTransform,uiTransform);
     }
+    
     protected override void Init()
     {
         base.Init();
         mainCamTransform = CameraController.Instance.MainCam.transform;
+        inputCanvasGO.SetActive(true);
     }
+
+    
     protected override WeaponController GetCharacterWeapon()
     {
-        var newWp = Instantiate(hammerWeaponPrefab)
+        var gData = GameManager.Instance.DataController;
+        var newWp = PollingManager.Instance.WeaponPolling.Instantiate(gData.GetPlayerWeapon())
             .GetComponent<WeaponController>();
         newWp.Init(gameObject,weaponHolderTF);
         return newWp;
+        return null;
     }
     protected override void DeSpawn()
     {
+        base.DeSpawn();
+        inputCanvasGO.SetActive(false);
+    }
+
+    protected override void OnCharacterChangeState(CharacterState oldState, CharacterState newState)
+    {
+        base.OnCharacterChangeState(oldState, newState);
         
     }
+    
+
     protected override void Update()
     {
         base.Update();
@@ -79,6 +93,13 @@ public class PlayerController : CharacterController
                     CharacterState = CharacterState.Idle;
                 }
                 break;
+            case CharacterState.Attack:
+                if (playerInput.magnitude > 0.1f)
+                {
+                    //transistion to run state
+                    CharacterState = CharacterState.Move;
+                }
+                break;
         }
         
     }
@@ -100,10 +121,5 @@ public class PlayerController : CharacterController
             navMesh.Move(moveDirec * speed * Time.deltaTime);
         }
     }
-    // be called by animation Event (attack clip)
-    public override void Attack()
-    {
-        base.Attack();
-        
-    }
+   
 }

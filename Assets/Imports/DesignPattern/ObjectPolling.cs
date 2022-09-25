@@ -23,6 +23,10 @@ public class ObjectPolling
         _owner = owner;
 
         _container = new GameObject(_originPool.name + "_Polling_Container").transform;
+        if (owner != null)
+        {
+            _container.transform.SetParent(owner.transform);
+        }
         _container.gameObject.AddComponent<PollContainer>().Initial(_owner);
         _pollContainer = _container.GetComponent<PollContainer>();
         for (int i = 0; i < num; i++)

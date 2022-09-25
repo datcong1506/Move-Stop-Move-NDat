@@ -8,7 +8,6 @@ public class AIController : CharacterController
     protected override void Awake()
     {
         base.Awake();
-        Init();
     }
 
     protected override void Update()
@@ -56,11 +55,17 @@ public class AIController : CharacterController
 
         if (newState != CharacterState.Move)
         {
-            navMesh.isStopped = true;
+            if (navMesh.isOnNavMesh)
+            {
+                navMesh.isStopped = true;
+            }
         }
         else
         {
-            navMesh.isStopped = false;
+            if (navMesh.isOnNavMesh)
+            {
+                navMesh.isStopped = false;
+            }
         }
     }
     private IEnumerator IdleToMove()
@@ -75,6 +80,11 @@ public class AIController : CharacterController
     
     protected override WeaponController GetCharacterWeapon()
     {
+        var gData = GameManager.Instance.DataController;
+        var newWp = PollingManager.Instance.WeaponPolling.Instantiate(gData.GetPlayerWeapon())
+            .GetComponent<WeaponController>();
+        newWp.Init(gameObject,weaponHolderTF);
+        return newWp;
         return null;
     }
     protected override void Move()
@@ -86,7 +96,7 @@ public class AIController : CharacterController
             var randomVector3 = new Vector3(randomDirec.x, 0, randomDirec.y).normalized;
             navMesh.SetDestination(
                 CacheComponentManager.Instance.TFCache.Get(gameObject).position 
-                + randomVector3 * UnityEngine.Random.Range(1f, 9f));
+                + randomVector3 * UnityEngine.Random.Range(4f, 9f));
         }
     }
     

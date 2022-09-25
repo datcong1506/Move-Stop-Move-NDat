@@ -43,8 +43,10 @@ public class BulletController : MonoBehaviour
             {
                 if (characterController.IsAlive())
                 {
-                    Debug.Log("hit");
                     characterController.OnBeHit();
+                    CacheComponentManager.Instance.CCCache
+                        .Get(owner.gameObject)
+                        .OnCharacterKillEnemy();
                 }
             }
         }

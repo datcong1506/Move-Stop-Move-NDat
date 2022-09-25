@@ -29,6 +29,16 @@ public class UIManager : Singleton<UIManager>
     {
         return Resources.Load("UI/" + uIID.ToString()) as GameObject;
     }
+
+    public UICanvas GetUICanvas(UI uIID)
+    {
+        if (storageUIs.ContainsKey(uIID))
+        {
+            return storageUIs[uIID];
+        }
+
+        return null;
+    }
     public void LoadUI(UI uIId)
     {
         bool exsistUI = storageUIs.ContainsKey(uIId);

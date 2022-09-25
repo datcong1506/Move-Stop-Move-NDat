@@ -8,28 +8,37 @@ public class DynamicData
     public int GoldCount;
     public int CurrentLevelIndex;
     public int BestRank;
-    public List<HatType> OwnHats;
-    public List<SkinComboType> OwnSkins;
-    public List<PantType> OwnPants;
-    public List<ShieldType> OwnShields;
-    public HatType HatEquipped;
-    public int HatSkinID;
-    public SkinComboType SkinComboEquipped;
-    public int SkinComboID;
-    public PantType PantEquipped;
-    public int PantSkinID;
-    public ShieldType ShieldEquipped;
-    public int ShieldSkinID;
+    public List<string> OwnHats;
+    public List<string> OwnSkinCombo;
+    public List<string> OwnPants;
+    public List<string> OwnShields;
+    public List<string> OwnWeaponSkins;
+    public List<string> OwnWeapons;
+    public string HatEquipped;
+    public string SkinComboEquipped;
+    public string PantEquipped;
+    public string ShieldEquipped;
     public WeaponType WeaponEquipped;
-    public int WeaponSkinID;
-    
+    public string WeaponSkinName;
+
+
+    #region GameSetting
+    public bool UseSound;
+    public bool UseVib;
+    #endregion
     public DynamicData()
     {
         GoldCount = 0;
         CurrentLevelIndex = 1;
         BestRank = 99999;
-        OwnHats = new List<HatType>();
-        OwnPants = new List<PantType>();
-        OwnShields = new List<ShieldType>();
+        OwnHats = new List<string>();
+        OwnPants = new List<string>();
+        OwnShields = new List<string>();
+        OwnWeaponSkins = new List<string>();
+        OwnWeapons = new List<string> { WeaponType.Hammer.ToString() };
+        WeaponEquipped = WeaponType.Hammer;
+        WeaponSkinName = "HammerSkin01";
+        UseSound = true;
+        UseVib = true;
     }
 }

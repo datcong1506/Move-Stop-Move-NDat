@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7a183ef125f974cb76fc4d2b2c4049, type: 3}
+  m_Name: Tiger
+  m_EditorClassIdentifier: 
+  Value: 1000
+  PreviewObject: {fileID: 812592946666883602, guid: 444103d29977279408956339fb5df011, type: 3}
+  CharacterObject: {fileID: 812592946666883602, guid: e420428eb4125cd44ba7f3b4b6c84b08, type: 3}

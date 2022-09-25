@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class CameraController : Singleton<CameraController>
 {
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private Camera shopCamera;// to render 3d object
     public Camera MainCam
     {
         get
@@ -13,12 +14,25 @@ public class CameraController : Singleton<CameraController>
             return mainCamera;
         }
     }
-    public Camera ShopCamera
+    
+
+    [SerializeField] private CinemachineVirtualCamera followerCine;
+    // public CinemachineVirtualCamera FollowerCine => followerCine;
+    public void SetFollowCam(Transform follow,Transform lookAt)
     {
-        get
-        {
-            return shopCamera;
-        }
+        followerCine.Follow = follow;
+        followerCine.LookAt = lookAt;
     }
 
+    public void AddCamOverLay(Camera cam)
+    {
+        var uACD= mainCamera.GetUniversalAdditionalCameraData();
+        uACD.cameraStack.Add(cam);
+    }
+
+    public void RemoveCamOverlay(Camera cam)
+    {
+        var uACD= mainCamera.GetUniversalAdditionalCameraData();
+        uACD.cameraStack.Remove(cam);
+    }
 }

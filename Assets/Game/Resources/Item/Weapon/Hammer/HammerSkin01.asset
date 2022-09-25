@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: HammerSkin01
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponSkinInfo
+  Value: 0
+  WeaponSkinType: 1
+  PreviewWeapon: {fileID: 6903586470440624549, guid: b9358270ac504d94a99c371154b4570c, type: 3}
+  WorldWeapon: {fileID: 9062896607092644928, guid: 3bced4faa09435940b0274675a91c86a, type: 3}

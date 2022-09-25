@@ -6,8 +6,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
-
-
 public enum CharacterState
 {
     Init,// just do nothing
@@ -21,7 +19,7 @@ public enum CharacterState
 public abstract class CharacterController : MonoBehaviour
 {
     [Header("UI")] 
-    [SerializeField] private Transform uiTransform;
+    [SerializeField] protected Transform uiTransform;
     [SerializeField] private Transform uiPanelTransform;
     [SerializeField] private TextMeshProUGUI characterNameText;
     [SerializeField] private Image killImage;
@@ -29,6 +27,7 @@ public abstract class CharacterController : MonoBehaviour
     [Header("Movement")]
     [SerializeField] protected float speed = FixVariable.CHARACTER_SPEED;
     [SerializeField] protected NavMeshAgent navMesh;
+    public NavMeshAgent NavMesh => navMesh;
     [Header("Animation")] 
     [SerializeField] private Animator animator;
     [SerializeField] private string currentParam;
@@ -64,13 +63,23 @@ public abstract class CharacterController : MonoBehaviour
         get => version;
         set => version = value;
     }
-
     protected virtual void Awake()
     {
+       
     }
 
-    
-    
+    protected void OnEnable()
+    {
+        GameManager.Instance.GameChangeStateEvent.AddListener(OnGameChangeState);
+    }
+
+    protected void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.GameChangeStateEvent.RemoveListener(OnGameChangeState);
+        }
+    }
 
     protected virtual void OnDestroy()
     {
@@ -79,7 +88,6 @@ public abstract class CharacterController : MonoBehaviour
             CacheComponentManager.Instance.CCCache.Remove(gameObject);
         }
     }
-
     protected virtual void Update()
     {
         //
@@ -89,7 +97,22 @@ public abstract class CharacterController : MonoBehaviour
     {
         UpdateUIPosision();
     }
-    
+    protected virtual void Init()
+    {
+        //default
+        speed = FixVariable.CHARACTER_SPEED;
+        killCount = 0;
+        CacheComponentManager.Instance.CCCache.Add(gameObject);
+        weaponController = GetCharacterWeapon();
+    }
+    private void OnGameChangeState(GameState oldState, GameState newState)
+    {
+        if (newState == GameState.PlayState)
+        {
+            Init();
+            CharacterState = CharacterState.Idle;
+        }
+    }
     protected virtual void OnCharacterChangeState(CharacterState oldState,CharacterState newState)
     {
         ChangeAnimation(newState.ToString());
@@ -97,6 +120,9 @@ public abstract class CharacterController : MonoBehaviour
         {
             case CharacterState.Attack:
                 RotateToTarget(target);
+                break;
+            case CharacterState.Die:
+                LevelManager.Instance.OnCharacterDie(this);
                 break;
         }
     }
@@ -111,7 +137,6 @@ public abstract class CharacterController : MonoBehaviour
                 return false;
             }
         }
-        
         
         List<Transform> removeTargets = new List<Transform>();
         for (int i = 0; i < targets.Count; i++)
@@ -129,6 +154,8 @@ public abstract class CharacterController : MonoBehaviour
             targets.Remove(removeTargets[i]);
         }
 
+    
+        
         if (targets.Count > 0)
         {
             return true;
@@ -138,7 +165,7 @@ public abstract class CharacterController : MonoBehaviour
     }
     protected Vector3 FindNearestTarget()
     {
-        float maxLengToTarget = 1000;
+        float minDIs = 1000;
         Vector3 tPosision = Vector3.zero;
         for (int i = 0; i < targets.Count; i++)
         {
@@ -146,25 +173,24 @@ public abstract class CharacterController : MonoBehaviour
             var distanceToTarget =
                 (CacheComponentManager.Instance.TFCache
                     .Get(gameObject).position - targetKeyValue.Key.position).magnitude;
-            if (distanceToTarget < maxLengToTarget)
+            if (distanceToTarget < minDIs)
             {
                 tPosision = targetKeyValue.Key.position;
+                minDIs = distanceToTarget;
             }
         }
         return tPosision;
     }
     public bool IsAlive(int ver)
     {
-        return ver==Version;
+        return ver==Version&&IsAlive();
     }
-
     public bool IsAlive()
     {
         return gameObject.activeSelf && CharacterState != CharacterState.Die;
     }
     public void AddTarget(Transform nTarget)
     {
-        Debug.Log(gameObject.name+nTarget.gameObject.name);
         if(nTarget.gameObject==gameObject) return;
         if (!targets.ContainsKey(nTarget))
         {
@@ -173,13 +199,19 @@ public abstract class CharacterController : MonoBehaviour
     }
     public void RemoveTarget(Transform eTarget)
     {
+        if (this as PlayerController != null)
+        {
+            Debug.Log(gameObject.name);
+        }
+        
         if (targets.ContainsKey(eTarget))
         {
             targets.Remove(eTarget);
         }
     }
     protected abstract void Move();
-    public virtual void Attack()
+    // be called by animation Event (attack clip)
+    public  void Attack()
     {
         if (CharacterState != CharacterState.Die
             && CharacterState!=CharacterState.Init)
@@ -207,18 +239,12 @@ public abstract class CharacterController : MonoBehaviour
             CharacterState = CharacterState.Die;
         }
     }
-    protected virtual void Init()
+    
+
+    protected virtual void DeSpawn()
     {
-        //default
-        speed = FixVariable.CHARACTER_SPEED;
         Version++;
-        targets.Clear();
-        killCount = 0;
-        CharacterState=CharacterState.Idle;
-        CacheComponentManager.Instance.CCCache.Add(gameObject);
-        weaponController = GetCharacterWeapon();
     }
-    protected abstract void DeSpawn();
     protected virtual void ChangeAnimation(string newParam)
     {
         animator.ResetTrigger(currentParam);
@@ -236,7 +262,60 @@ public abstract class CharacterController : MonoBehaviour
     }
     protected void UpdateUIPosision()
     {
-        var mainCam = CameraController.Instance.MainCam;
-        uiPanelTransform.position=mainCam.WorldToScreenPoint(uiTransform.position);
+        if (!GameManager.Instance.IsInSHop)
+        {
+            if (!uiTransform.gameObject.activeSelf)
+            {
+                uiTransform.gameObject.SetActive(true);
+            }
+            var mainCam = CameraController.Instance.MainCam;
+            uiPanelTransform.position=mainCam.WorldToScreenPoint(uiTransform.position);
+        }
+        else
+        {
+            if (uiTransform.gameObject.activeSelf)
+            {
+                uiTransform.gameObject.SetActive(false);
+            }
+        }
+        
+    }
+
+    public void OnCharacterKillEnemy()
+    {
+        
+    }
+
+    private GameObject shield;
+    private GameObject hat;
+
+    protected void SetUpOutLook(GameObject hat, GameObject shield, Material pant, Material skin)
+    {
+        if (hat != null)
+        {
+            if (hat != null)
+            {
+                hat.SetActive(false);
+            }
+            this.hat = hat;
+            //
+            
+        }
+
+        if (shield != null)
+        {
+            
+        }
+
+        if (pant != null)
+        {
+            pantSkinMesh.material = pant;
+        }
+
+        if (skin != null)
+        {
+            skinSkinMesh.material = skin;
+        }
+        
     }
 }
