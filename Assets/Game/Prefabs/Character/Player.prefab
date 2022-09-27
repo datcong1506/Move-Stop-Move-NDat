@@ -2534,7 +2534,7 @@ GameObject:
   - component: {fileID: 3779821483493542351}
   - component: {fileID: 3779821483493542350}
   - component: {fileID: 3779821483493542337}
-  - component: {fileID: 3779821483493542336}
+  - component: {fileID: 1211016138693184630}
   m_Layer: 12
   m_Name: AttackSphere
   m_TagString: Untagged
@@ -2587,7 +2587,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3779821483493542336
+--- !u!114 &1211016138693184630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2596,7 +2596,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3779821483493542348}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 450f312a5c4a4bb4b8f37e5c99cdbb7b, type: 3}
+  m_Script: {fileID: 11500000, guid: 374424d18064abc4398194ca5df00f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 3779821482983140386}

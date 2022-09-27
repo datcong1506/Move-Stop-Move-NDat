@@ -7,14 +7,22 @@ using UnityEngine;
 [Serializable]
 public class ObjectPolling
 {
+    private List<GameObject> polls;
+    public List<GameObject> Polls
+    {
+        get => polls;
+        set => polls = value;
+    }
     private Dictionary<GameObject, byte> _avaiableObjects;
     private Dictionary<GameObject, byte> _unAvaibaleObjects;
+    public Dictionary<GameObject, byte> UnAvaibaleObjects => _unAvaibaleObjects;
     [SerializeField] private GameObject _originPool;
     [SerializeField] private GameObject _owner;
     [SerializeField] private Transform _container;
     [SerializeField] public PollContainer _pollContainer;
     public ObjectPolling(GameObject owner, GameObject poolObject, int num = 20)
     {
+        Polls = new List<GameObject>();
         _avaiableObjects = new Dictionary<GameObject, byte>();
         _unAvaibaleObjects = new Dictionary<GameObject, byte>();
 
@@ -36,6 +44,7 @@ public class ObjectPolling
             newInstance.transform.SetParent(_container);
             _unAvaibaleObjects.Add(newInstance, 0);
             newInstance.SetActive(false);
+            Polls.Add(newInstance);
         }
     }
     public int UnavaiableCount()
@@ -81,6 +90,7 @@ public class ObjectPolling
         newInstance.AddComponent<PollObject>().Initial(this);
         newInstance.transform.SetParent(_container);
         _unAvaibaleObjects.Add(newInstance, 0);
+        polls.Add(newInstance);
         return newInstance;
     }
 
@@ -114,7 +124,7 @@ public class ObjectPolling
 public class PollObject : MonoBehaviour
 {
     [SerializeField] private ObjectPolling _objectPolling;
-
+    
 
 
     public void Initial(ObjectPolling objectPolling)

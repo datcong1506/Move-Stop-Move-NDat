@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97410d2ae3be2a345a1d5b89b4203201, type: 3}
+  m_Name: Level2
+  m_EditorClassIdentifier: 
+  SceneName: Level2
+  AiCount: 50
+  RadiusToCenter: 50
+  Center: {x: -0.32671738, y: 11.093667, z: -0.009796143}
+  AiPerWave: 10
+  NextLevel: {fileID: 0}
+  PlayerSpawnPosision: {x: -0.32671738, y: 11.093667, z: -0.009796143}

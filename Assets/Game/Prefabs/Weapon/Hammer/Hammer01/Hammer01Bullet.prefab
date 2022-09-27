@@ -147,6 +147,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   rigidbody: {fileID: 7563474775011507372}
+  lifeTime: 2
+  destroyWhenHitCharacter: 1
 --- !u!54 &7563474775011507372
 Rigidbody:
   m_ObjectHideFlags: 0

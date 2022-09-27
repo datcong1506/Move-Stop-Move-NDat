@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2919af1f690a7429df9da699539afd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localPosision: {x: 0, y: 0, z: -75}
-  localEulerAngle: {x: 7.999999, y: 323.30002, z: 32.903004}
-  localScale: {x: 6112.3, y: 6112.3, z: 6112.3}
+  localPosision: {x: 0, y: -0.1, z: -0.8}
+  localEulerAngle: {x: 8, y: -36.7, z: 32.903004}
+  localScale: {x: 45.6, y: 45.6, z: 45.6}
   material: {fileID: 0}
 --- !u!1 &3244567337332191275
 GameObject:
