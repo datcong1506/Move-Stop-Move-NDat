@@ -7,10 +7,11 @@ public static class Helper
     public static Vector3 RandomNavmeshLocation(float radius, Vector3 center, Vector3 playerPosision)
     {
         UnityEngine.AI.NavMeshHit hit;
-        Vector3 finalPosition = Vector3.zero;
+        Vector3 finalPosition = center;
         for (int i = 0; i < 100; i++)
         {
             Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * radius+center;
+            randomDirection.y = 0;
             if (UnityEngine.AI.NavMesh.SamplePosition(randomDirection, out hit, radius, 1))
             {
                 finalPosition = hit.position;

@@ -42,7 +42,11 @@ public abstract class CharacterController : MonoBehaviour
     protected Dictionary<Transform,int> targets = new Dictionary<Transform, int>();
     public Vector3 target;
     [SerializeField] private int killCount;
-    
+    public int KillCount
+    {
+        get => killCount;
+        set => killCount = value;
+    }
     [SerializeField]private CharacterState characterState;
     public CharacterState CharacterState
     {
@@ -68,13 +72,12 @@ public abstract class CharacterController : MonoBehaviour
        
     }
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
         GameManager.Instance.GameChangeStateEvent.AddListener(OnGameChangeState);
-        Init();
     }
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
         if (GameManager.Instance != null)
         {
@@ -104,11 +107,13 @@ public abstract class CharacterController : MonoBehaviour
     {
         //default
         gameObject.SetActive(true);
+        UpdateKillCountPanelColor(skinSkinMesh.sharedMaterial.color);
         CharacterState = CharacterState.Init;
         speed = FixVariable.CHARACTER_SPEED;
         killCount = 0;
         CacheComponentManager.Instance.CCCache.Add(gameObject);
         weaponController = GetCharacterWeapon();
+        Version++;
     }
     private void OnGameChangeState(GameState oldState, GameState newState)
     {
@@ -265,7 +270,7 @@ public abstract class CharacterController : MonoBehaviour
 
     protected virtual void DeSpawn()
     {
-        Version++;
+       
     }
     protected virtual void ChangeAnimation(string newParam)
     {
@@ -282,9 +287,15 @@ public abstract class CharacterController : MonoBehaviour
     {
         killCountText.text = killCount.ToString();
     }
+
+    protected void UpdateKillCountPanelColor(Color color)
+    {
+        killImage.color = color;
+    }
+    
     protected virtual void UpdateUI()
     {
-        if (!GameManager.Instance.IsInSHop)
+        if (CharacterState!=CharacterState.Init)
         {
             if (!uiTransform.gameObject.activeSelf)
             {
@@ -300,12 +311,12 @@ public abstract class CharacterController : MonoBehaviour
                 uiTransform.gameObject.SetActive(false);
             }
         }
-        
+        UpdateKillCountUI(KillCount);
     }
 
     public void OnCharacterKillEnemy()
     {
-        
+        KillCount++;
     }
 
     private GameObject currentShield;
@@ -339,6 +350,5 @@ public abstract class CharacterController : MonoBehaviour
         {
             skinSkinMesh.material = skin;
         }
-        
     }
 }

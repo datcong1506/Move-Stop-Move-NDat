@@ -9,4 +9,5 @@ public class SkinInfo : ScriptableObject
     public int Value; 
     public GameObject PreviewObject;
     public GameObject CharacterObject;
+    public Material Material;
 }

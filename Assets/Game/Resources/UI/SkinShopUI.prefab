@@ -1054,7 +1054,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9c4e9dd0dcd02a6488b074d173f43087, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 830b0bcd38414b242b5f40edc5dab7b8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2265,7 +2265,7 @@ GameObject:
   - component: {fileID: 1809076379440101003}
   - component: {fileID: 1809076379440101004}
   m_Layer: 16
-  m_Name: Skin
+  m_Name: Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2630,8 +2630,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1809076378362731314}
   m_HandleRect: {fileID: 1809076378362731315}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 0.9999999
+  m_Value: -0.000082372324
+  m_Size: 0.9993143
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3075,7 +3075,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1809076379843148273}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -2620528913443474546}
+        m_TargetAssemblyTypeName: SkinShopUIController, Assembly-CSharp
+        m_MethodName: ExitButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1809076379843754991
 GameObject:
   m_ObjectHideFlags: 0
@@ -3816,6 +3828,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemUIPrefab: {fileID: 69931531189279813, guid: 6ad58ac598f4f084d8af622e33914f17, type: 3}
   itemHolderTransform: {fileID: 1809076378520331465}
+  goldCount: {fileID: 1809076379326345416}
   equipButton: {fileID: 1809076379306228341}
   unEquipButton: {fileID: 1809076378834586748}
   unLockButton: {fileID: 1809076379395179880}
@@ -3823,7 +3836,12 @@ MonoBehaviour:
   unlockOneTimeButton: {fileID: 3167210596036972493}
   choseItemEffect: {fileID: 5731767853848030085}
   ChoseGroupEffect: {fileID: 0}
+  pant: {fileID: 1809076379906319245}
+  hat: {fileID: 7972796218489841426}
+  shield: {fileID: 1809076379440101000}
+  skinCombo: {fileID: 4484332194534086474}
   shopCam: {fileID: 7635334879368082097}
+  choseGroupEffect: {fileID: 6858506585978878651}
 --- !u!95 &4894755568467883451
 Animator:
   serializedVersion: 4

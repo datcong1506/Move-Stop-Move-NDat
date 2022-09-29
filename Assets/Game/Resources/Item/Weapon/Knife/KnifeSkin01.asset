@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba86f716c65bc54ca42b3b84b36959d, type: 3}
+  m_Name: KnifeSkin01
+  m_EditorClassIdentifier: 
+  Value: 0
+  WeaponSkinType: 1
+  PreviewWeapon: {fileID: 6951077884346240840, guid: b12c5736643b7714e82fe42844c38518, type: 3}
+  WorldWeapon: {fileID: 6803488543867498703, guid: 00886f4db236e0d4db5fc4e9451a2ae6, type: 3}

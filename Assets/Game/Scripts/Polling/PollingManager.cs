@@ -108,6 +108,6 @@ public class PollingManager : Singleton<PollingManager>
         {
             enemyPolls[i].SetActive(false);
         }
-        
+        Debug.Log(enemyPolls.Count);
     }
 }

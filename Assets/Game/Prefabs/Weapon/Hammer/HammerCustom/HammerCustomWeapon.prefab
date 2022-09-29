@@ -133,6 +133,6 @@ MonoBehaviour:
   localEulerAngle: {x: 6.51913, y: 170.57115, z: 283.5762}
   localScale: {x: 32.344685, y: 32.34468, z: 32.344696}
   selfTransform: {fileID: 7666018897979132816}
-  bullet: {fileID: 7563474775011507374, guid: f7d9061feb0ad2140a3b8e35a1568f33, type: 3}
+  bullet: {fileID: 2336496369870465471, guid: ac18c6922bc69dd41872f2608807877f, type: 3}
   reloadBulletTime: 1.5
   render: {fileID: 6834179196587885775}

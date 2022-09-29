@@ -127,7 +127,7 @@ public class PlayerController : CharacterController
     protected override void UpdateUI()
     {
         base.UpdateUI();
-        if (GameManager.Instance.IsInSHop)
+        if (CharacterState==CharacterState.Init)
         {
             if (inputCanvasGO.gameObject.activeSelf)
             {

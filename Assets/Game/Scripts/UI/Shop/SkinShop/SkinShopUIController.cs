@@ -9,7 +9,7 @@ public class SkinShopUIController : UICanvas
     [SerializeField] private GameObject itemUIPrefab;
     [SerializeField] private Transform itemHolderTransform;
     private List<ItemUIController> skinUIs=new List<ItemUIController>();
-
+    [SerializeField] private TextMeshProUGUI goldCount;
     [SerializeField] private GameObject equipButton;
     [SerializeField] private GameObject unEquipButton;
     [SerializeField] private GameObject unLockButton;
@@ -22,9 +22,22 @@ public class SkinShopUIController : UICanvas
     private ItemUIController currentChoseItem;
     private SkinType currentSkintype;
     
+    [Header("ITemGroups")]
+    [SerializeField] private Transform pant;
+    [SerializeField] private Transform hat;
+    [SerializeField] private Transform shield;
+    [SerializeField] private Transform skinCombo;
+
+    
+
     
     [SerializeField] private Camera shopCam;
-    
+
+    private void Update()
+    {
+        UpdateGoldCount();
+    }
+
     public override void OnEnter()
     {
         CameraController.Instance.AddCamOverLay(shopCam);
@@ -36,10 +49,10 @@ public class SkinShopUIController : UICanvas
     {
         CameraController.Instance.RemoveCamOverlay(shopCam);
         GameManager.Instance.IsInSHop = false;
+        Destroy(gameObject);
     }
     private void LoadItems(SkinType skinType)
-    {   
-        
+    {
         //Clear itemUIs
         foreach (var skinUIController in skinUIs)
         {
@@ -51,7 +64,6 @@ public class SkinShopUIController : UICanvas
         // initialize new list itemUI
         var dataController = GameManager.Instance.DataController;
         var skinUIButtonInfos = dataController.GetSkinUIButtonInfos(skinType);
-        Debug.Log(skinUIButtonInfos.Count);
         foreach (var skinUIButtonInfo in skinUIButtonInfos)
         {
             //Instantiate new ItemUI
@@ -61,6 +73,8 @@ public class SkinShopUIController : UICanvas
             skinUIs.Add(newItemUIController);
             //
         }
+
+        ChoseGroupEffectHandle(skinType);
     }
 
     private void UpdateButtonHandle(ItemUIButtonInfo itemUIButtonInfo)
@@ -102,12 +116,43 @@ public class SkinShopUIController : UICanvas
             }
         }
     }
+
+    private void UpdateGoldCount()
+    {
+        goldCount.text = GameManager.Instance.DataController.GoldCount.ToString();
+    }
     private void UpdateChoseSkinEffect(Transform target)
     {
-        
-        Debug.Log("s");
         StartCoroutine(DelaySetChoseEffect(target));
     }
+
+    private void ChoseGroupEffectHandle(SkinType skinType)
+    {
+        switch (skinType)
+        {
+            case  SkinType.Hat:
+                UpdateChoseGroupEffect(hat);
+                break;
+            case  SkinType.Shield:
+                UpdateChoseGroupEffect(shield);
+                break;
+            case  SkinType.SkinCombo:
+                UpdateChoseGroupEffect(skinCombo);
+                break;
+            case  SkinType.Pant:
+                UpdateChoseGroupEffect(pant);
+                break;
+        }
+    }
+
+    [SerializeField] private Transform choseGroupEffect;
+    private void UpdateChoseGroupEffect(Transform parent)
+    {
+        choseGroupEffect.SetParent(parent);
+        choseGroupEffect.localPosition=Vector3.zero;
+        choseGroupEffect.localScale=Vector3.one;
+    }
+    
 
     private IEnumerator DelaySetChoseEffect(Transform target)
     {
@@ -136,7 +181,13 @@ public class SkinShopUIController : UICanvas
             ReLoad(currentChoseItem.ItemUIButtonInfo.SkinName);
         }
     }
+
+    public void ExitButton()
+    {
+        UIManager.Instance.LoadUI(UI.StartUI);
+    }
     
+    // note:
     public void UnLockOneTimeButton()
     {
         

@@ -23,6 +23,7 @@ public class StartUIController : UICanvas
     {
         goldCountTMP.text = GameManager.Instance.DataController.GoldCount.ToString();
     }
+    //Call By animation Event
     public void HideCanvas()
     {
         Destroy(gameObject);

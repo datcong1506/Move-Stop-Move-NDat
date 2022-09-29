@@ -92,6 +92,9 @@ public class DataController:MonoBehaviour
             {
                 weaponRef = new Dictionary<WeaponType, ItemRef<WeaponSkinInfo>>();
                 weaponRef.Add(WeaponType.Hammer, new ItemRef<WeaponSkinInfo>("item/weapon/"+WeaponType.Hammer.ToString()));
+                weaponRef.Add(WeaponType.Knife, new ItemRef<WeaponSkinInfo>("item/weapon/"+WeaponType.Knife.ToString()));
+                weaponRef.Add(WeaponType.TripleKnife, new ItemRef<WeaponSkinInfo>("item/weapon/"+WeaponType.TripleKnife.ToString()));
+
             }
             return weaponRef;
         }
@@ -203,6 +206,7 @@ public class DataController:MonoBehaviour
                     PreviewPrefab = skin.Value.PreviewWeapon,
                     Own = IsOwnWeaponSkin(skin.Key,skin.Value.WeaponSkinType),
                     WeaponSkinType = skin.Value.WeaponSkinType,
+                    IsEquipping = DynamicData.WeaponSkinName==skin.Key,
                 }
             );
         }
@@ -256,7 +260,16 @@ public class DataController:MonoBehaviour
 
         return false;
     }
-   
+
+    public bool UnLockWeapon(WeaponType weaponType)
+    {
+        return true;
+    }
+
+    public bool UnLockWeaponSkin(WeaponType weaponType, string skinName)
+    {
+        return true;
+    }
 
 
     public static T[] GetItemsInRS<T>(string path) where  T : ScriptableObject
@@ -309,6 +322,50 @@ public class DataController:MonoBehaviour
     public void SetLevel(string lvName)
     {
         DynamicData.CurrentLevelIndex = lvName;
+    }
+
+    public void SetPlayerWeapon(WeaponType weaponType, string skin)
+    {
+        DynamicData.WeaponEquipped = weaponType;
+        DynamicData.WeaponSkinName = skin;
+    }
+
+    public Material GetPlayerPantMaterial()
+    {
+        if (DynamicData.IsUsingPant())
+        {
+            return SkinRef[SkinType.Pant].Item[DynamicData.PantEquipped].Material;
+        }
+
+        return null;
+    }
+
+    public Material GetPlayerSkinMaterial()
+    {
+        if (DynamicData.IsUsingSkinCombo())
+        {
+            return SkinRef[SkinType.SkinCombo].Item[DynamicData.PantEquipped].Material;
+        }
+        return null;
+    }
+
+    public GameObject GetPlayerHat()
+    {
+        if (DynamicData.IsUsingHat())
+        {
+            return SkinRef[SkinType.Hat].Item[DynamicData.HatEquipped].CharacterObject;
+        }
+        return null;
+    }
+    
+    public GameObject GetPlayerShield()
+    {
+        if (DynamicData.IsUsingShield())
+        {
+            return SkinRef[SkinType.Shield].Item[DynamicData.ShieldEquipped].CharacterObject;
+        }
+
+        return null;
     }
 }
 

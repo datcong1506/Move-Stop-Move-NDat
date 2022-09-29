@@ -10,10 +10,21 @@ public class AIController : CharacterController
         base.Awake();
     }
 
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        if (IndicatorManager.Instance != null)
+        {
+            IndicatorManager.Instance.OnInScreen(this as CharacterController);
+        }
+    }
+
     protected override void Update()
     {
+        base.Update();
         MoveHandle();
         AttackHandle();
+        InDicatorHandle();
     }
 
     private void MoveHandle()
@@ -101,5 +112,34 @@ public class AIController : CharacterController
     {
         
     }
-    
+
+    private void InDicatorHandle()
+    {
+        if (!IsInScreen())
+        {
+            if (CharacterState != CharacterState.Init
+                && CharacterState != CharacterState.Dance
+                && CharacterState != CharacterState.Die)
+            {
+                IndicatorManager.Instance.OnOutScreen(this as CharacterController);
+            }
+        }
+        else
+        {
+            IndicatorManager.Instance.OnInScreen(this as CharacterController);
+        }
+        
+    }
+
+    private bool IsInScreen()
+    {
+        var screenPoint = CameraController.Instance
+            .MainCam.WorldToViewportPoint(CacheComponentManager.Instance.TFCache.Get(gameObject).position);
+        if (screenPoint.x >= 1 || screenPoint.x <= 0
+                               || screenPoint.y >= 1 || screenPoint.y <= 0)
+        {
+            return false;
+        }
+        return true;
+    }
 }

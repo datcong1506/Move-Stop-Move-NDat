@@ -11,6 +11,7 @@ public class WeaponSkinButtonInfo
     public GameObject PreviewPrefab;
     public bool Own;
     public WeaponSkinType WeaponSkinType;
+    public bool IsEquipping;
 }
 
 public class WeaponSKinPreviewButtonController : MonoBehaviour
@@ -19,15 +20,18 @@ public class WeaponSKinPreviewButtonController : MonoBehaviour
     private WeaponSkinButtonInfo weaponSkinButtonInfo;
     public WeaponSkinButtonInfo WeaponSkinButtonInfo => weaponSkinButtonInfo;
     private WeaponShopUiController weaponShopUiController;
-    public void Init(WeaponShopUiController weaponShopUiController,WeaponSkinButtonInfo weaponSkinButtonInfo,Transform parent)
+    protected GameObject preview;
+    public virtual void Init(WeaponShopUiController weaponShopUiController,WeaponSkinButtonInfo weaponSkinButtonInfo,Transform parent)
     {
         this.weaponSkinButtonInfo = weaponSkinButtonInfo;
         this.weaponShopUiController = weaponShopUiController;
+        transform.SetParent(parent);
+        transform.localScale=Vector3.one;
         
         var previewWeaponController = Instantiate(weaponSkinButtonInfo.PreviewPrefab)
             .GetComponent<PreviewObjectController>();
         previewWeaponController.Init(previewContainer);
-        
+        preview = previewWeaponController.gameObject;
     }
     
     public void ChoseButton()

@@ -31,14 +31,43 @@ public class DynamicData
         GoldCount = 0;
         CurrentLevelIndex = "Level1";
         BestRank = 99999;
+        
         OwnHats = new List<string>();
         OwnPants = new List<string>();
         OwnShields = new List<string>();
         OwnWeaponSkins = new List<string>();
         OwnWeapons = new List<string> { WeaponType.Hammer.ToString() };
+        
         WeaponEquipped = WeaponType.Hammer;
         WeaponSkinName = "HammerSkin01";
+
+        HatEquipped = "";
+        SkinComboEquipped = "";
+        PantEquipped = "";
+        ShieldEquipped = "";
+        
         UseSound = true;
         UseVib = true;
+    }
+
+
+    public bool IsUsingHat()
+    {
+        return HatEquipped != "";
+    }
+
+    public bool IsUsingShield()
+    {
+        return ShieldEquipped != "";
+    }
+
+    public bool IsUsingPant()
+    {
+        return PantEquipped != "";
+    }
+
+    public bool IsUsingSkinCombo()
+    {
+        return SkinComboEquipped != null;
     }
 }

@@ -53,6 +53,8 @@ public class PauseUIController : UICanvas
     public void HomeButton()
     {
         // reset level
+        GameManager.Instance.TryAgain();
+        
     }
 
     public void ContinueButton()

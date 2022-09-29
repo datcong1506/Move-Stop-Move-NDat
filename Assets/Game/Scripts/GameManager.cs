@@ -48,10 +48,25 @@ public class GameManager : Singleton<GameManager>
         set
         {
             isInShop = value;
+            if (value)
+            {
+                DisablePalyer();
+            }
+            else
+            {
+                EnablePlayer();
+            }
         }
     }
 
     [SerializeField] private PlayerController playerController;
+    public PlayerController PlayerController
+    {
+        get
+        {
+            return playerController;
+        }
+    }
     [SerializeField] private List<AIController> aiOnField;
 
     [SerializeField]private Level level;
@@ -76,8 +91,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Init()
     {
-        Application.targetFrameRate = 60;
-        playerController = Instantiate(DataController.GetPlayerPrefab()).GetComponent<PlayerController>();
+        SpawnPlayer();
         level = DataController.GetCurrentLevel();
         LevelManager.Instance.LoadLevel(level.SceneName);
         SceneManager.sceneLoaded += OnLoadScene;
@@ -96,6 +110,7 @@ public class GameManager : Singleton<GameManager>
 
     private void StartLevel()
     {
+        GameState = GameState.InitState;
         PollingManager.Instance.DisableAllBullet();
         PollingManager.Instance.DisableAllEnemy();
         playerController.Init();
@@ -154,7 +169,7 @@ public class GameManager : Singleton<GameManager>
                 break;
             }
             var newAI = PollingManager.Instance.GetEnemy();
-            CacheComponentManager.Instance.CCCache.TryGet(newAI,out var aiCOntroller);
+            var aiCOntroller= CacheComponentManager.Instance.CCCache.Get(newAI);
             aiOnField.Add(aiCOntroller as AIController);
             aiCOntroller.Init();
             if (GameState == GameState.PlayState)
@@ -215,6 +230,52 @@ public class GameManager : Singleton<GameManager>
         }
         
     }
+
+    
+    private void SpawnPlayer()
+    {
+        if (playerController == null)
+        {
+            playerController = Instantiate(DataController.GetPlayerPrefab()).GetComponent<PlayerController>();
+        }
+    }
+
+    public void DisablePalyer()
+    {
+        if (playerController != null)
+        {
+            playerController.gameObject.SetActive(false);
+            
+        }
+    }
+
+    public void EnablePlayer()
+    {
+        if (!playerController.gameObject.activeSelf)
+        {
+            playerController.gameObject.SetActive(true);
+            playerController.Init();
+        }
+    }
+
+    [SerializeField] private GameObject previewCharacterPrefab;
+    private CharacterPreviewController currentPreviewCharacter;
+    public void SpawnPreview()
+    {
+        currentPreviewCharacter = Instantiate(previewCharacterPrefab)
+            .GetComponent<CharacterPreviewController>();
+        currentPreviewCharacter.transform.position = playerController.transform.position;
+    }
+
+    public void DestroyPreview()
+    {
+        if (currentPreviewCharacter != null)
+        {
+            Destroy(currentPreviewCharacter.gameObject);
+        }
+    }
+    
+    
     
 #if UNITY_EDITOR
     [ContextMenu("ClearNavmeshData")]

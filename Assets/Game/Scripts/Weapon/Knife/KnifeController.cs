@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KnifeController : MonoBehaviour
+public class KnifeController : WeaponController
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override void SpawnBullet(Vector3 target)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        var bullet = InstanBulelt();
+        var bulletCCL=CacheComponentManager.Instance.BulletCache.Get(bullet);
+        bulletCCL.Init(
+            owner,
+            selfTransform.position,
+            selfTransform.eulerAngles,
+            selfTransform.lossyScale
+            ,target);
     }
 }
