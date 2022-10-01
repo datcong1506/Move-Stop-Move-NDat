@@ -16,7 +16,8 @@ public class PlayerController : CharacterController
     private float rotateSpeed;
     [SerializeField] private float rotateSmoothTime = 0.1f;
     private bool canChangeState;
-    
+
+    [SerializeField] private Transform lockTargetTF;
     #region Canxoa
 
  
@@ -32,6 +33,7 @@ public class PlayerController : CharacterController
     
     public override void Init()
     {
+        SetPlayerSkin();
         base.Init();
         mainCamTransform = CameraController.Instance.MainCam.transform;
         inputCanvasGO.SetActive(true);
@@ -67,7 +69,42 @@ public class PlayerController : CharacterController
         base.Update();
         ChangeStateHandle();
         Move();
+        UpdateLockTarget();
     }
+
+    private void UpdateLockTarget()
+    {
+        if (CharacterState != CharacterState.Die&&CharacterState!=CharacterState.Init)
+        {
+            if (CanAttack())
+            {
+                if (!lockTargetTF.gameObject.activeSelf)
+                {
+                    lockTargetTF.gameObject.SetActive(true);
+                }
+                target = FindNearestTarget();
+                lockTargetTF.position = target;
+                //NOTE: if not set rotation, locktarget with rotate with player because it is player child
+                // Vector3(90,0,0) just a eulerangle in prefab
+                lockTargetTF.rotation=Quaternion.Euler(90,0,0);
+            }
+            else
+            {
+                if (lockTargetTF.gameObject.activeSelf)
+                {
+                    lockTargetTF.gameObject.SetActive(false);
+                }
+            }
+        }
+        else
+        {
+            if (lockTargetTF.gameObject.activeSelf)
+            {
+                lockTargetTF.gameObject.SetActive(false);
+            }
+        }
+    }
+    
     private void ChangeStateHandle()
     {
         //moveinput
@@ -142,5 +179,36 @@ public class PlayerController : CharacterController
             }
         }
     }
-   
+
+    protected override void OnCharacterDie()
+    {
+        GameAudioManager.Instance.PlayClip(AudioType.CharacterDie);
+        base.OnCharacterDie();
+    }
+
+    public override void OnCharacterKillEnemy()
+    {
+        base.OnCharacterKillEnemy();
+        GameAudioManager.Instance.Vibrate();
+    }
+
+    protected override void OnCharacterLevelUp()
+    {
+        base.OnCharacterLevelUp();
+        CacheComponentManager.Instance
+            .LevelUpEffect.Get(
+                PollingManager.Instance.InstantiateLevelUpEffect()
+                ).Init(CacheComponentManager.Instance.TFCache.Get(gameObject));
+    }
+    
+
+    
+    private void SetPlayerSkin()
+    {
+        var dataController = GameManager.Instance.DataController;
+        SetHat(dataController.GetPlayerHat());
+        SetShield(dataController.GetPlayerShield());
+        SetPant(dataController.GetPlayerPantMaterial());
+        SetSkin(dataController.GetPlayerSkinMaterial());
+    }
 }

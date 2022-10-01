@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class WeaponShopUiController : UICanvas
 {
+    [SerializeField] private TextMeshProUGUI goldCount;
+    
     [SerializeField] private TextMeshProUGUI weaponName;
     [SerializeField] private Transform previewHolder;
     [SerializeField] private Transform skinPreviewHolder;
@@ -23,24 +25,31 @@ public class WeaponShopUiController : UICanvas
     [SerializeField] private GameObject equippedPanel;
     [SerializeField] private GameObject selectButton;
     [SerializeField] private GameObject unlockPanel;
+    [SerializeField] private GameObject unlockWeaponButton;
     
-    
+    private GameObject currentPreview;
+
     
     private void Awake()
     {
         skinButtonControllers = new List<WeaponSKinPreviewButtonController>();
     }
 
+    private void Update()
+    {
+        UpdateGoldCount();
+    }
+
     public override void OnEnter()
     {
-        GameManager.Instance.IsInSHop = true;
         CameraController.Instance.AddCamOverLay(shopCam);
+        GameManager.Instance.EnterWeaponShop();
         Init();
     }
     public override void OnExit()
     {
         CameraController.Instance.RemoveCamOverlay(shopCam);
-        GameManager.Instance.IsInSHop = false;
+        GameManager.Instance.ExitWeaponShop();
         Destroy(gameObject);
     }
     private void Init()
@@ -48,6 +57,7 @@ public class WeaponShopUiController : UICanvas
         LoadWeapon(currentWeaponTypeIndex);
     }
 
+    
     private void LoadWeapon(WeaponType weaponType)
     {
         for (int i = 0; i < skinButtonControllers.Count; i++)
@@ -73,7 +83,6 @@ public class WeaponShopUiController : UICanvas
             }
             
         }
-
         ChoseSkin(skinButtonControllers[0]);
     }
 
@@ -86,9 +95,16 @@ public class WeaponShopUiController : UICanvas
             LoadWeapon(weaponTypes[currentWeaponTypeIndex]);
         }
     }
-    public void ExitButton()
+
+    private void Exit()
     {
         UIManager.Instance.LoadUI(UI.StartUI);
+    }
+    
+    
+    public void ExitButton()
+    {
+        Exit();
     }
 
     public void SelectButton()
@@ -96,16 +112,29 @@ public class WeaponShopUiController : UICanvas
         GameManager.Instance
             .DataController
             .SetPlayerWeapon(weaponTypes[currentWeaponTypeIndex],currentSkin.WeaponSkinButtonInfo.WeaponSkinName);
+        Exit();
     }
 
-    public void UnLockOneTimeButton()
+    public void UnLockWeaponSkinOneTimeButton()
     {
-        
+        GameManager.Instance.DataController.UnlockWeaponSkinOneTime(weaponTypes[currentWeaponTypeIndex],
+            currentSkin.WeaponSkinButtonInfo.WeaponSkinName);
+        LoadWeapon(weaponTypes[currentWeaponTypeIndex]);
     }
 
-    public void UnLockButton()
+    public void UnlockWeaponSkinButton()
     {
         // GameManager.Instance.DataController.UnLockSkin()
+        GameManager.Instance.DataController.UnLockWeaponSkin(weaponTypes[currentWeaponTypeIndex],
+            currentSkin.WeaponSkinButtonInfo.WeaponSkinName);
+        LoadWeapon(weaponTypes[currentWeaponTypeIndex]);
+    }
+
+
+    public void UnLockWeaponButton()
+    {
+        GameManager.Instance.DataController.UnLockWeapon(weaponTypes[currentWeaponTypeIndex]);
+        LoadWeapon(weaponTypes[currentWeaponTypeIndex]);
     }
     
     public void NextLeftButton()
@@ -123,27 +152,33 @@ public class WeaponShopUiController : UICanvas
         equippedPanel.SetActive(false);
         selectButton.SetActive(false);
         unlockPanel.SetActive(false);
+        unlockWeaponButton.SetActive(false);
 
-        if (weaponSkinButtonInfo.IsEquipping)
+        if (!GameManager.Instance.DataController.IsOwnWeapon(weaponTypes[currentWeaponTypeIndex]))
         {
-            equippedPanel.SetActive(true);
+            unlockWeaponButton.SetActive(true);
         }
         else
         {
-            if (weaponSkinButtonInfo.Own)
+            if (weaponSkinButtonInfo.IsEquipping)
             {
-                selectButton.SetActive(true);
+                equippedPanel.SetActive(true);
             }
             else
             {
-                unlockPanel.SetActive(true);
+                if (weaponSkinButtonInfo.Own)
+                {
+                    selectButton.SetActive(true);
+                }
+                else
+                {
+                    unlockPanel.SetActive(true);
+                }
             }
         }
-        
     }
 
 
-    private GameObject currentPreview;
     private void Preview(WeaponSKinPreviewButtonController weaponSKinPreviewButtonController)
     {
         if (currentPreview != null)
@@ -161,5 +196,11 @@ public class WeaponShopUiController : UICanvas
         currentSkin = weaponSKinPreviewButtonController;
         UpdateActiveButtonHandle(weaponSKinPreviewButtonController.WeaponSkinButtonInfo);
         Preview(weaponSKinPreviewButtonController);
+    }
+    
+    
+    private void UpdateGoldCount()
+    {
+        goldCount.text = GameManager.Instance.DataController.GoldCount.ToString();
     }
 }

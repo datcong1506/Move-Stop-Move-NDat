@@ -32,5 +32,11 @@ public class StaticData:ScriptableObject
     public GameObject PlayerPrefab => playerPrefab;
     [SerializeField] private GameObject enemyPrefab;
     public GameObject EnemyPrefab => enemyPrefab;
+    [SerializeField] private GameObject characterPreviewPrefab;
+    public GameObject CharacterPreviewPrefab => characterPreviewPrefab;
 
+    [SerializeField] private Material defaultPantMaterial;
+    public Material DefaultPantMaterial => defaultPantMaterial;
+    [SerializeField] private Material defaultSkinMaterial;
+    public Material DefaultSkinMaterial => defaultSkinMaterial;
 }

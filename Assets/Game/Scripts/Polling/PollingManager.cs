@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
+//NOTE: will refactor this
 public class PollCache<T> where  T : Object
 {
     private Dictionary<T, ObjectPolling> pollCache;
@@ -30,6 +30,9 @@ public class PollCache<T> where  T : Object
 
 public class PollingManager : Singleton<PollingManager>
 {
+    //NOTE: could move prefab to staticdata
+    [SerializeField] private GameObject levelUpEffectPrefab;
+    [SerializeField] private GameObject hitCharacterEffectPrefab;
     private PollCache<GameObject> weaponPolling;
     public PollCache<GameObject> WeaponPolling
     {
@@ -55,8 +58,28 @@ public class PollingManager : Singleton<PollingManager>
             return bulletPolling;
         }   
     }
-
     private ObjectPolling enemyPolling=null;
+    private ObjectPolling levelUpEffectPolling;
+    private ObjectPolling hitCharacterEffectPolling;
+    public GameObject InstantiateLevelUpEffect()
+    {
+        if (levelUpEffectPolling == null)
+        {
+            levelUpEffectPolling = new ObjectPolling(gameObject, levelUpEffectPrefab, 7);
+        }
+
+        return levelUpEffectPolling.Instantiate();
+    }
+    
+    //Note: Blood Effect
+    public GameObject InstantiateHitCharacterEffect()
+    {
+        if (hitCharacterEffectPolling == null)
+        {
+            hitCharacterEffectPolling = new ObjectPolling(gameObject, hitCharacterEffectPrefab, 50);
+        }
+        return hitCharacterEffectPolling.Instantiate();
+    }
     public GameObject GetEnemy()
     {
         
@@ -75,8 +98,6 @@ public class PollingManager : Singleton<PollingManager>
         }
 
     }
-
-
     public int GetBulletCount()
     {
         var bulletPoll=BulletPolling.GetPoll();
@@ -87,7 +108,6 @@ public class PollingManager : Singleton<PollingManager>
         }
         return count;
     }
-
     public void DisableAllBullet()
     {
         var bulletPoll=BulletPolling.GetPoll();
@@ -99,7 +119,6 @@ public class PollingManager : Singleton<PollingManager>
             }
         }
     }
-
     public void DisableAllEnemy()
     {
         if(enemyPolling==null) return;

@@ -6,9 +6,14 @@ using UnityEngine;
 public class CharacterPreviewController : MonoBehaviour
 {
 
+    [SerializeField] private Transform camLookAtTF;
+    [SerializeField] private Transform camFollowTF;
+
     private GameObject currentHat;
     private GameObject currentShield;
-    
+
+    [SerializeField] private Transform selfTransform;
+    [SerializeField] protected Animator animator;
     [SerializeField] protected Transform hatHolderTF;
     [SerializeField] protected SkinnedMeshRenderer pantSkinMesh;
     [SerializeField] protected SkinnedMeshRenderer skinSkinMesh;
@@ -16,14 +21,14 @@ public class CharacterPreviewController : MonoBehaviour
     [Header("Weapon")] [SerializeField] protected Transform weaponHolderTF;
 
 
-    private void Awake()
-    {
-        Init();
-    }
+    
 
-    private void Init()
+    public void Init(Vector3 posission)
     {
+        CameraController.Instance.SetSkinShopCam(camFollowTF,camLookAtTF);
+        selfTransform.position = posission;
         AttachWeapon();
+        Reset();
     }
 
     private void AttachWeapon()
@@ -32,19 +37,54 @@ public class CharacterPreviewController : MonoBehaviour
         weapon.GetComponent<WeaponController>().Init(gameObject,weaponHolderTF);
     }
     
-    
-    protected void SetSkinHanle(GameObject hatPrefab, GameObject shieldPrefab, Material pant, Material skin)
+
+    public void Reset()
     {
+        var dataController = GameManager.Instance.DataController;
+        SetHat(dataController.GetPlayerHat());
+        SetShield(dataController.GetPlayerShield());
+        SetPant(dataController.GetPlayerPantMaterial());
+        SetSkin(dataController.GetPlayerSkinMaterial());
+    }
+
+    public void SetCharacterSkin(SkinType skinType, string skinName)
+    {
+        var characterObject = GameManager.Instance.DataController.GetCharacterSkin(skinType, skinName);
+        switch (skinType)
+        {
+            case SkinType.Hat:
+                SetHat(characterObject);
+                break;
+            case SkinType.Pant:
+                SetPant(characterObject
+                    .GetComponent<PantInfo>().Material);
+                break;
+        }
+    }
+
+    private void SetHat(GameObject hatPrefab)
+    {
+        if (currentHat != null)
+        {
+            Destroy(currentHat);
+        }
         if (hatPrefab != null)
         {
-            if (currentHat != null)
-            {
-                Destroy(currentHat);
-            }
+            
             currentHat=Instantiate(hatPrefab);
             currentHat.GetComponent<CharacterObjectController>().Init(hatHolderTF);
             //
         }
+    }
+    private void SetPant(Material pant)
+    {
+        if (pant != null)
+        {
+            pantSkinMesh.material = pant;
+        }
+    }
+    private void SetShield(GameObject shieldPrefab)
+    {
         if (shieldPrefab != null)
         {
             if (currentShield != null)
@@ -54,13 +94,13 @@ public class CharacterPreviewController : MonoBehaviour
             currentShield=Instantiate(shieldPrefab);
             currentShield.GetComponent<CharacterObjectController>().Init(shieldHolderTF);
         }
-        if (pant != null)
-        {
-            pantSkinMesh.material = pant;
-        }
+    }
+    private void SetSkin(Material skin)
+    {
         if (skin != null)
         {
             skinSkinMesh.material = skin;
         }
     }
+  
 }

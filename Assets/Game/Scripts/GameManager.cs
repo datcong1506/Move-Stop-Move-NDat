@@ -38,27 +38,7 @@ public class GameManager : Singleton<GameManager>
             GameChangeStateEvent?.Invoke(oldState,value);
         }
     }
-    [SerializeField]private bool isInShop;
-    public bool IsInSHop
-    {
-        get
-        {
-            return isInShop;
-        }
-        set
-        {
-            isInShop = value;
-            if (value)
-            {
-                DisablePalyer();
-            }
-            else
-            {
-                EnablePlayer();
-            }
-        }
-    }
-
+    
     [SerializeField] private PlayerController playerController;
     public PlayerController PlayerController
     {
@@ -68,7 +48,9 @@ public class GameManager : Singleton<GameManager>
         }
     }
     [SerializeField] private List<AIController> aiOnField;
-
+    [SerializeField] private CharacterPreviewController characterPreviewController;
+    public CharacterPreviewController CharacterPreviewController => characterPreviewController;
+    
     [SerializeField]private Level level;
     [SerializeField]private int aiCount;
     public int AICount
@@ -76,11 +58,11 @@ public class GameManager : Singleton<GameManager>
         get => aiCount;
         set => aiCount = value;
     }
-    public int CharacterCount
+    public int CharacterAliveCount
     {
         get
         {
-            return aiOnField.Count + 1;
+            return aiCount + (playerController.CharacterState!=CharacterState.Die?1:0);
         }
     }
     protected override void Awake()
@@ -88,7 +70,6 @@ public class GameManager : Singleton<GameManager>
         base.Awake();
         Init();
     }
-
     private void Init()
     {
         SpawnPlayer();
@@ -97,8 +78,6 @@ public class GameManager : Singleton<GameManager>
         SceneManager.sceneLoaded += OnLoadScene;
         aiOnField = new List<AIController>();
     }
-    
-    
     
     private void OnLoadScene(Scene arg0, LoadSceneMode arg1)
     {
@@ -206,11 +185,13 @@ public class GameManager : Singleton<GameManager>
         GameState = GameState.WinState;
         playerController.CharacterState = CharacterState.Dance;
         UIManager.Instance.LoadUI(UI.WinUI);
+        GameAudioManager.Instance.PlayClip(AudioType.Win);
     }
 
     public void Lose()
     {
         UIManager.Instance.LoadUI(UI.LoseUI);
+        GameAudioManager.Instance.PlayClip(AudioType.Lose);
     }
 
     public void TryAgain()
@@ -240,7 +221,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void DisablePalyer()
+    private void DisablePalyer()
     {
         if (playerController != null)
         {
@@ -249,7 +230,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void EnablePlayer()
+    private void EnablePlayer()
     {
         if (!playerController.gameObject.activeSelf)
         {
@@ -258,23 +239,48 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    [SerializeField] private GameObject previewCharacterPrefab;
-    private CharacterPreviewController currentPreviewCharacter;
-    public void SpawnPreview()
+    private void SpawnCharacterPreview()
     {
-        currentPreviewCharacter = Instantiate(previewCharacterPrefab)
-            .GetComponent<CharacterPreviewController>();
-        currentPreviewCharacter.transform.position = playerController.transform.position;
-    }
-
-    public void DestroyPreview()
-    {
-        if (currentPreviewCharacter != null)
+        if (characterPreviewController == null)
         {
-            Destroy(currentPreviewCharacter.gameObject);
+            characterPreviewController = Instantiate(DataController.GetCharacterPreviewPrefab())
+                .GetComponent<CharacterPreviewController>();
+            characterPreviewController.Init(CacheComponentManager.Instance
+                .TFCache.Get(playerController.gameObject).position);
         }
     }
     
+    private void DestroyCharacterPreview()
+    {
+        if (characterPreviewController != null)
+        {
+            Destroy(characterPreviewController.gameObject);
+        }
+    }
+
+    public void EnterSkinShop()
+    {
+        DisablePalyer();
+        SpawnCharacterPreview();
+        CameraController.Instance.EnterSkinShop();
+    }
+
+    public void ExitSkinShop()
+    {
+        EnablePlayer();
+        DestroyCharacterPreview();
+        CameraController.Instance.ExitSkinShop();
+    }
+
+    public void EnterWeaponShop()
+    {
+        DisablePalyer();
+    }
+
+    public void ExitWeaponShop()
+    {
+        EnablePlayer();
+    }
     
     
 #if UNITY_EDITOR

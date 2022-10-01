@@ -15,3 +15,4 @@ MonoBehaviour:
   Value: 1000
   PreviewObject: {fileID: 812592946666883602, guid: 444103d29977279408956339fb5df011, type: 3}
   CharacterObject: {fileID: 812592946666883602, guid: e420428eb4125cd44ba7f3b4b6c84b08, type: 3}
+  Material: {fileID: 2100000, guid: ab267d450be78aa43a1d6709e1cd5365, type: 2}

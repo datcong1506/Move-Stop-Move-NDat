@@ -100,6 +100,12 @@ public class DataController:MonoBehaviour
         }
     }
 
+    
+    
+    private List<string> weaponSkinUnLockOneTime=new List<string>();
+    private Dictionary<SkinType, string> skinUnlockOneTime = new Dictionary<SkinType, string>();
+
+
     private void Awake()
     {
         Init();
@@ -109,13 +115,7 @@ public class DataController:MonoBehaviour
     {
         OnDeSpawn();
     }
-
-    private void Start()
-    {
-       // var rs= GetWeaponSkinButtonInfos(WeaponType.Hammer);
-       // Debug.Log(rs.Count);
-    }
-
+    
     private void Init()
     {
     }
@@ -150,6 +150,7 @@ public class DataController:MonoBehaviour
     
     private void OnDeSpawn()
     {
+        DeleteUnlockOneTime();
         WriteData();
     }
     public List<ItemUIButtonInfo>  GetSkinUIButtonInfos(SkinType skinType)
@@ -166,7 +167,7 @@ public class DataController:MonoBehaviour
             itemUIButtonInfos.Add(
                 new ItemUIButtonInfo(
                     item.Key,
-                    false,
+                    IsSkinEquipped(skinType,item.Key),
                     IsOwnSkin(skinType,item.Key),
                     item.Value.Value,
                     item.Value.PreviewObject
@@ -176,6 +177,28 @@ public class DataController:MonoBehaviour
         return itemUIButtonInfos;
     }
 
+    public bool IsSkinEquipped(SkinType skinType, string skinName)
+    {
+        switch (skinType)
+        {
+            case SkinType.Hat:
+                return DynamicData.HatEquipped == skinName;
+            case SkinType.Pant:
+                return DynamicData.PantEquipped == skinName;
+            case SkinType.Shield:
+                return DynamicData.ShieldEquipped == skinName;
+            case SkinType.SkinCombo:
+                return DynamicData.SkinComboEquipped == skinName;
+        }
+
+        return false;
+    }
+
+    public bool IsOwnWeapon(WeaponType weaponType)
+    {
+        return DynamicData.OwnWeapons.Contains(weaponType.ToString());
+    }
+    
     public bool IsOwnWeaponSkin(string name, WeaponSkinType weaponSkinType)
     {
         if (weaponSkinType == WeaponSkinType.Custom)
@@ -261,35 +284,101 @@ public class DataController:MonoBehaviour
         return false;
     }
 
+    public bool UnLockSkinOneTime(SkinType skinType, string skinName)
+    {
+        var skins = SkinRef[skinType];
+        var ownSkins = GetOwnSkins(skinType);
+        ownSkins.Add(name);
+        skinUnlockOneTime.Add(skinType,skinName);
+        //
+        return true;
+    }
+    
+    
     public bool UnLockWeapon(WeaponType weaponType)
     {
+        if (!DynamicData.OwnWeapons.Contains(weaponType.ToString()))
+        {
+            DynamicData.OwnWeapons.Add(weaponType.ToString());
+        }
         return true;
     }
 
     public bool UnLockWeaponSkin(WeaponType weaponType, string skinName)
     {
-        return true;
-    }
-
-
-    public static T[] GetItemsInRS<T>(string path) where  T : ScriptableObject
-    {
-        var itemInRS = Resources.LoadAll<T>(path);
-        return itemInRS;
-    }
-    public static void SetItemsInRS<T>(string resourcePath,ref Dictionary<string,T> itemRef) where T : ScriptableObject
-    {
-        itemRef = new Dictionary<string, T>();
-        var itemInRS = GetItemsInRS<T>(resourcePath);
-        for (int i = 0; i < itemInRS.Length; i++)
+        if (!DynamicData.OwnWeaponSkins.Contains(skinName))
         {
-            itemRef.Add(itemInRS[i].name,itemInRS[i]);
+            if (GoldCount >= WeaponRef[weaponType].Item[skinName].Value)
+            {
+                DynamicData.OwnWeaponSkins.Add(skinName);
+                return true;
+            }
         }
+        return false;
+    }
+    public bool UnlockWeaponSkinOneTime(WeaponType weaponType, string skinName)
+    {
+        if (!DynamicData.OwnWeaponSkins.Contains(skinName))
+        {
+            DynamicData.OwnWeaponSkins.Add(skinName);
+            weaponSkinUnLockOneTime.Add(skinName);
+            return true;
+        }
+        return false;
+    }
+    private void DeleteUnlockOneTime()
+    {
+        for (int i = 0; i < weaponSkinUnLockOneTime.Count; i++)
+        {
+            DynamicData.OwnWeaponSkins.Remove(weaponSkinUnLockOneTime[i]);
+            if (weaponSkinUnLockOneTime[i] == DynamicData.WeaponSkinName)
+            {
+                DynamicData.ResetWeaponEquipped();
+            }
+        }
+
+        for (int i = 0; i < skinUnlockOneTime.Count; i++)
+        {
+            GetOwnSkins(skinUnlockOneTime.ElementAt(i).Key).Remove(skinUnlockOneTime.ElementAt(i).Value);
+            switch (skinUnlockOneTime.ElementAt(i).Key)
+            {
+                case SkinType.Hat:
+                    if (skinUnlockOneTime.ElementAt(i).Value == DynamicData.HatEquipped)
+                    {
+                        DynamicData.ResetHatEquipped();
+                    }
+                    break;
+                case SkinType.Pant:
+                    if (skinUnlockOneTime.ElementAt(i).Value == DynamicData.PantEquipped)
+                    {
+                        DynamicData.ResetPantEquipped();
+                    }
+                    break;
+                case SkinType.Shield:
+                    if (skinUnlockOneTime.ElementAt(i).Value == DynamicData.ShieldEquipped)
+                    {
+                        DynamicData.ResetShieldEquipped();
+                    }
+                    break;
+                case SkinType.SkinCombo:
+                    if (skinUnlockOneTime.ElementAt(i).Value == DynamicData.SkinComboEquipped)
+                    {
+                        DynamicData.ResetSkinComboEquipped();
+                    }
+                    break;
+            }
+        }
+    }
+
+    // NOTE:get item like hat,pant in world not in preview.
+    public GameObject GetCharacterSkin(SkinType skinType, string skinName)
+    {
+        return SkinRef[skinType].Item[skinName].CharacterObject;
     }
 
     public GameObject GetPlayerWeapon()
     {
-        return WeaponRef[dynamicData.WeaponEquipped].Item[dynamicData.WeaponSkinName].WorldWeapon;
+        return WeaponRef[DynamicData.WeaponEquipped].Item[DynamicData.WeaponSkinName].WorldWeapon;
     }
     
     public GameObject GetEnemyPrefab()
@@ -319,6 +408,11 @@ public class DataController:MonoBehaviour
         return null;
     }
 
+   
+    
+    
+    
+
     public void SetLevel(string lvName)
     {
         DynamicData.CurrentLevelIndex = lvName;
@@ -336,8 +430,8 @@ public class DataController:MonoBehaviour
         {
             return SkinRef[SkinType.Pant].Item[DynamicData.PantEquipped].Material;
         }
-
-        return null;
+        
+        return staticData.DefaultPantMaterial;
     }
 
     public Material GetPlayerSkinMaterial()
@@ -346,7 +440,7 @@ public class DataController:MonoBehaviour
         {
             return SkinRef[SkinType.SkinCombo].Item[DynamicData.PantEquipped].Material;
         }
-        return null;
+        return staticData.DefaultSkinMaterial;
     }
 
     public GameObject GetPlayerHat()
@@ -366,6 +460,66 @@ public class DataController:MonoBehaviour
         }
 
         return null;
+    }
+
+    public GameObject GetCharacterPreviewPrefab()
+    {
+        return staticData.CharacterPreviewPrefab;
+    }
+
+    public void SetPlayerSkin(SkinType skin, string skinName)
+    {
+        switch (skin)
+        {
+            case SkinType.Hat:
+                DynamicData.HatEquipped = skinName;
+                break;
+            case SkinType.Pant:
+                DynamicData.PantEquipped = skinName;
+                break;
+            case SkinType.Shield:
+                DynamicData.ShieldEquipped = skinName;
+                break;
+            case SkinType.SkinCombo:
+                DynamicData.SkinComboEquipped = skinName;
+                break;
+        }
+    }
+
+    public void UnEquipPlayerSkin(SkinType skin)
+    {
+        switch (skin)
+        {
+            case SkinType.Hat:
+                DynamicData.ResetHatEquipped();
+                break;
+            case SkinType.Pant:
+                DynamicData.ResetPantEquipped();
+                break;
+            case SkinType.Shield:
+                DynamicData.ResetShieldEquipped();
+                break;
+            case SkinType.SkinCombo:
+                DynamicData.ResetSkinComboEquipped();
+                break;
+        }
+    }
+    
+    
+    
+    public static T[] GetItemsInRS<T>(string path) where  T : ScriptableObject
+    {
+        var itemInRS = Resources.LoadAll<T>(path);
+        return itemInRS;
+    }
+    public static void SetItemsInRS<T>(string resourcePath,ref Dictionary<string,T> itemRef) where T : ScriptableObject
+    {
+        itemRef = new Dictionary<string, T>();
+        var itemInRS = GetItemsInRS<T>(resourcePath);
+        for (int i = 0; i < itemInRS.Length; i++)
+        {
+            itemRef.Add(itemInRS[i].name,itemInRS[i]);
+        }
     }
 }
 

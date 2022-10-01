@@ -41,14 +41,13 @@ public class SkinShopUIController : UICanvas
     public override void OnEnter()
     {
         CameraController.Instance.AddCamOverLay(shopCam);
-        GameManager.Instance.IsInSHop = true;
+        GameManager.Instance.EnterSkinShop();
         LoadItems(SkinType.Hat);
-        SelectSkinHandle(skinUIs[0],skinUIs[0].ItemUIButtonInfo);
     }
     public override void OnExit()
     {
+        GameManager.Instance.ExitSkinShop();
         CameraController.Instance.RemoveCamOverlay(shopCam);
-        GameManager.Instance.IsInSHop = false;
         Destroy(gameObject);
     }
     private void LoadItems(SkinType skinType)
@@ -73,8 +72,10 @@ public class SkinShopUIController : UICanvas
             skinUIs.Add(newItemUIController);
             //
         }
-
         ChoseGroupEffectHandle(skinType);
+        //set preview   
+        GameManager.Instance.CharacterPreviewController.Reset();
+        SelectSkinHandle(skinUIs[0],skinUIs[0].ItemUIButtonInfo);
     }
 
     private void UpdateButtonHandle(ItemUIButtonInfo itemUIButtonInfo)
@@ -103,6 +104,7 @@ public class SkinShopUIController : UICanvas
         UpdateButtonHandle(itemUIButtonInfo);
         UpdateChoseSkinEffect(itemUIController.transform);
         currentChoseItem = itemUIController;
+        GameManager.Instance.CharacterPreviewController.SetCharacterSkin(currentSkintype,itemUIButtonInfo.SkinName);
     }
     public void SelectSkinHandle(string name)
     {
@@ -190,17 +192,25 @@ public class SkinShopUIController : UICanvas
     // note:
     public void UnLockOneTimeButton()
     {
-        
+        var rs= GameManager.Instance.DataController.UnLockSkinOneTime(currentSkintype, currentChoseItem.ItemUIButtonInfo.SkinName);
+        if (rs)
+        {
+            ReLoad(currentChoseItem.ItemUIButtonInfo.SkinName);
+        }
     }
 
     public void EquipButton()
     {
-        
+        GameManager.Instance
+            .DataController.SetPlayerSkin(currentSkintype,currentChoseItem.ItemUIButtonInfo.SkinName);
+        ReLoad(currentChoseItem.ItemUIButtonInfo.SkinName);
     }
 
     public void UnEquipButton()
     {
-        
+        GameManager.Instance
+            .DataController.UnEquipPlayerSkin(currentSkintype);
+        ReLoad(currentChoseItem.ItemUIButtonInfo.SkinName);
     }
     
     public void LoadPants()

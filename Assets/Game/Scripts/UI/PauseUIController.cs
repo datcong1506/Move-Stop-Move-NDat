@@ -17,8 +17,8 @@ public class PauseUIController : UICanvas
     private void Update()
     {
         if (LevelManager.Instance != null)
-        { 
-            // aliveCount.text=LevelManager.Instance.LevelSetting.AICount.ToString();
+        {
+            aliveCount.text = GameManager.Instance.CharacterAliveCount.ToString();
         }
     }
 

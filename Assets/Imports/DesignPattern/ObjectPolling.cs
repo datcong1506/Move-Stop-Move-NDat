@@ -59,11 +59,11 @@ public class ObjectPolling
     {
         _avaiableObjects.Add(pollObject, 0);
         _unAvaibaleObjects.Remove(pollObject);
-        pollObject.transform.SetParent(_container);
-        if (pollObject.activeInHierarchy)
-        {
-            pollObject.SetActive(false);
-        }
+        // pollObject.transform.SetParent(_container);
+        // if (pollObject.activeSelf)
+        // {
+        //     pollObject.SetActive(false);
+        // }
     }
 
     public void OnPollEnable(GameObject poGameObject)
@@ -143,6 +143,7 @@ public class PollObject : MonoBehaviour
             {
                 if (_objectPolling._pollContainer.gameObject.activeInHierarchy)
                 {
+                    _objectPolling.OnPollDisable(gameObject);
                     _objectPolling._pollContainer.StartCoroutine(OnDisableDelayOneFrame());
                 }
             }
@@ -152,7 +153,9 @@ public class PollObject : MonoBehaviour
     IEnumerator OnDisableDelayOneFrame()
     {
         yield return new WaitForEndOfFrame();
-        _objectPolling.OnPollDisable(gameObject);
+        if(!gameObject.activeSelf)
+        transform.SetParent(_objectPolling._pollContainer.transform);
+        // _objectPolling.OnPollDisable(gameObject);
     }
 
     private void OnDestroy()

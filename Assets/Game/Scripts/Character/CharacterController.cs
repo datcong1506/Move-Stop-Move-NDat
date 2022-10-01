@@ -75,6 +75,7 @@ public abstract class CharacterController : MonoBehaviour
     protected virtual void OnEnable()
     {
         GameManager.Instance.GameChangeStateEvent.AddListener(OnGameChangeState);
+        Version++;
     }
 
     protected virtual void OnDisable()
@@ -107,13 +108,13 @@ public abstract class CharacterController : MonoBehaviour
     {
         //default
         gameObject.SetActive(true);
-        UpdateKillCountPanelColor(skinSkinMesh.sharedMaterial.color);
+        SetKillCountPanelColor(skinSkinMesh.sharedMaterial.color);
         CharacterState = CharacterState.Init;
         speed = FixVariable.CHARACTER_SPEED;
         killCount = 0;
         CacheComponentManager.Instance.CCCache.Add(gameObject);
         weaponController = GetCharacterWeapon();
-        Version++;
+        CacheComponentManager.Instance.TFCache.Get(gameObject).localScale=Vector3.one;
     }
     private void OnGameChangeState(GameState oldState, GameState newState)
     {
@@ -201,6 +202,10 @@ public abstract class CharacterController : MonoBehaviour
     {
         return gameObject.activeSelf && CharacterState != CharacterState.Die;
     }
+    
+    //NOTE : use trigger enter to detect enemy maybe make bugs
+    //  case 1: DisaaleObejct doesnt send trigger exit 
+    // END
     public void AddTarget(Transform nTarget)
     {
         if(nTarget.gameObject==gameObject) return;
@@ -209,6 +214,9 @@ public abstract class CharacterController : MonoBehaviour
             targets.Add(nTarget,CacheComponentManager.Instance.CCCache.Get(nTarget.gameObject).version);
         }
     }
+    //NOTE : use trigger enter to detect enemy maybe make bugs
+    //  case 1: DisaaleObejct doesnt send trigger exit 
+    // END
     public void RemoveTarget(Transform eTarget)
     {
         if (this as PlayerController != null)
@@ -252,7 +260,7 @@ public abstract class CharacterController : MonoBehaviour
         }
     }
 
-    private void OnCharacterDie()
+    protected virtual void OnCharacterDie()
     {
         GameManager.Instance.OnCharacterDie(this);
         StartCoroutine(DelaySetActive());
@@ -278,7 +286,7 @@ public abstract class CharacterController : MonoBehaviour
         currentParam = newParam;
         animator.SetTrigger(newParam);
     }
-    protected void UpdateCharacterNameUI(string name, Color color)
+    protected void SetCharacterNameUI(string name, Color color)
     {
         characterNameText.text = name;
         killImage.color = color;
@@ -288,7 +296,7 @@ public abstract class CharacterController : MonoBehaviour
         killCountText.text = killCount.ToString();
     }
 
-    protected void UpdateKillCountPanelColor(Color color)
+    protected void SetKillCountPanelColor(Color color)
     {
         killImage.color = color;
     }
@@ -314,25 +322,45 @@ public abstract class CharacterController : MonoBehaviour
         UpdateKillCountUI(KillCount);
     }
 
-    public void OnCharacterKillEnemy()
+    public virtual void OnCharacterKillEnemy()
     {
         KillCount++;
+        if (KillCount % FixVariable.CHARACTER_KILL_TO_LEVELUP == 0
+            &&FixVariable.MAX_CHARACTER_LEVEL*FixVariable.CHARACTER_KILL_TO_LEVELUP>=killCount)
+        {
+            OnCharacterLevelUp();
+        }
+    }
+    protected virtual void OnCharacterLevelUp()
+    {
+        CacheComponentManager.Instance.TFCache.Get(gameObject).localScale *= 1.1f;
     }
 
     private GameObject currentShield;
     private GameObject currentHat;
-    protected void SetSkinHanle(GameObject hatPrefab, GameObject shieldPrefab, Material pant, Material skin)
+    protected void SetHat(GameObject hatPrefab)
     {
+        if (currentHat != null)
+        {
+            Destroy(currentHat);
+        }
         if (hatPrefab != null)
         {
-            if (currentHat != null)
-            {
-                Destroy(currentHat);
-            }
+            
             currentHat=Instantiate(hatPrefab);
             currentHat.GetComponent<CharacterObjectController>().Init(hatHolderTF);
             //
         }
+    }
+    protected void SetPant(Material pant)
+    {
+        if (pant != null)
+        {
+            pantSkinMesh.material = pant;
+        }
+    }
+    protected void SetShield(GameObject shieldPrefab)
+    {
         if (shieldPrefab != null)
         {
             if (currentShield != null)
@@ -342,13 +370,13 @@ public abstract class CharacterController : MonoBehaviour
             currentShield=Instantiate(shieldPrefab);
             currentShield.GetComponent<CharacterObjectController>().Init(shieldHolderTF);
         }
-        if (pant != null)
-        {
-            pantSkinMesh.material = pant;
-        }
+    }
+    protected void SetSkin(Material skin)
+    {
         if (skin != null)
         {
             skinSkinMesh.material = skin;
         }
     }
+    
 }

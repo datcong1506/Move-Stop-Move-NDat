@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44246c39c58ea2b47809258faa88c562, type: 3}
   m_Name: StaticData
   m_EditorClassIdentifier: 
-  weapons: []
   playerPrefab: {fileID: 3779821482983140385, guid: 38228b55fc8878549ba7614dbfbeb92f, type: 3}
   enemyPrefab: {fileID: 4678934134720444477, guid: 5a4bb45f76f4b4242bf735e78cbcf4fc, type: 3}
+  characterPreviewPrefab: {fileID: 7707621153298791054, guid: 5c8c3b98b2a45234cb25ca6a1658ff4b, type: 3}
+  defaultPantMaterial: {fileID: 2100000, guid: ff18809ae3d9a934ea0529e88b6a62c5, type: 2}
+  defaultSkinMaterial: {fileID: 2100000, guid: be102c8ae8307524f9abee291d4ca41e, type: 2}

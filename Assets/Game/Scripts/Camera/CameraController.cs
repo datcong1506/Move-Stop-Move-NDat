@@ -14,9 +14,8 @@ public class CameraController : Singleton<CameraController>
             return mainCamera;
         }
     }
-    
-
     [SerializeField] private CinemachineVirtualCamera followerCine;
+    [SerializeField] private CinemachineVirtualCamera skinShopCine;
     // public CinemachineVirtualCamera FollowerCine => followerCine;
     public void SetFollowCam(Transform follow,Transform lookAt)
     {
@@ -34,5 +33,24 @@ public class CameraController : Singleton<CameraController>
     {
         var uACD= mainCamera.GetUniversalAdditionalCameraData();
         uACD.cameraStack.Remove(cam);
+    }
+
+
+    public void SetSkinShopCam(Transform fl,Transform lookAt)
+    {
+        skinShopCine.Follow = fl;
+        skinShopCine.LookAt = lookAt;
+    }
+    
+    public void EnterSkinShop()
+    {
+        skinShopCine.Priority = 11;
+        followerCine.Priority = 10;
+    }
+
+    public void ExitSkinShop()
+    {
+        skinShopCine.Priority = 10;
+        followerCine.Priority = 11;
     }
 }

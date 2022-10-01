@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,7 @@ public enum AudioType
 }
 
 
+[Serializable]
 class AudioConvert
 {
     public AudioType AudioType;
@@ -21,11 +23,12 @@ class AudioConvert
 }
 
 
-public class GameAudioManager : MonoBehaviour
+[RequireComponent(typeof(AudioSource))]
+public class GameAudioManager : Singleton<GameAudioManager>
 {
+    [SerializeField] private AudioSource audioSource;
     [SerializeField] private List<AudioConvert> audioList;
     private Dictionary<AudioType, AudioClip> audioDic=null;
-
     public Dictionary<AudioType, AudioClip> AudioDic
     {
         get
@@ -38,7 +41,6 @@ public class GameAudioManager : MonoBehaviour
             return audioDic;
         }
     }
-
     private void ConvertAudioListToDic()
     {
         audioDic = new Dictionary<AudioType, AudioClip>();
@@ -48,5 +50,21 @@ public class GameAudioManager : MonoBehaviour
         }
     }
 
+    public void PlayClip(AudioType clipType)
+    {
+        if (GameManager.Instance.DataController.UseSound)
+        {
+            //
+            audioSource.PlayOneShot(AudioDic[clipType]);
+        }
+    }
+
+    public void Vibrate()
+    {
+        if (GameManager.Instance.DataController.UseVib)
+        {
+            Handheld.Vibrate();
+        }
+    }
 
 }

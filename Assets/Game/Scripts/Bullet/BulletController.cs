@@ -38,6 +38,7 @@ public class BulletController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        
         Hit(other.gameObject);
         HitWallHandle(other.gameObject);
     }
@@ -63,6 +64,7 @@ public class BulletController : MonoBehaviour
             {
                 if (characterController.IsAlive())
                 {
+                    
                     characterController.OnBeHit();
                     CacheComponentManager.Instance.CCCache
                         .Get(owner.gameObject)
@@ -72,6 +74,10 @@ public class BulletController : MonoBehaviour
                         gameObject.SetActive(false);
                         this.StopAllCoroutines();
                     }
+                    CacheComponentManager.Instance
+                        .BloodEffectPolling.Get(
+                            PollingManager.Instance.InstantiateHitCharacterEffect())
+                        .Init(CacheComponentManager.Instance.TFCache.Get(gameObject).position);
                 }
             }
         }

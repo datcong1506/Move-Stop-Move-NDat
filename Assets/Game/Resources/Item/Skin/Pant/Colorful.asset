@@ -15,3 +15,4 @@ MonoBehaviour:
   Value: 0
   PreviewObject: {fileID: 2572197528424794255, guid: ba4befd6b8fd12f4baf0752d0b483315, type: 3}
   CharacterObject: {fileID: 2572197528424794255, guid: 044fb6658382aaf45ba182694b4348b9, type: 3}
+  Material: {fileID: 2100000, guid: 90bdf07166eb31341854a645ae9e7c2d, type: 2}

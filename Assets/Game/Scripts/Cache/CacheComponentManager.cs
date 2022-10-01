@@ -62,14 +62,15 @@ public class CacheComponent<T>
         cache.Clear();
     }
 }
-
 public class CacheComponentManager : Singleton<CacheComponentManager>
 {
     public CacheComponent<Transform> TFCache=new CacheComponent<Transform>();
     public CacheComponent<CharacterController> CCCache = new CacheComponent<CharacterController>();
     public CacheComponent<BulletController> BulletCache = new CacheComponent<BulletController>();
     public CacheComponent<WallController> WallCache = new CacheComponent<WallController>();
-
+    public CacheComponent<PlayerLevelUpEffectController> LevelUpEffect =
+        new CacheComponent<PlayerLevelUpEffectController>();
+    public CacheComponent<BloodEffectController> BloodEffectPolling = new CacheComponent<BloodEffectController>();
 
     public void ClearDataOnLoadLevel()
     {

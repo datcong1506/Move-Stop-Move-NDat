@@ -38,13 +38,11 @@ public class DynamicData
         OwnWeaponSkins = new List<string>();
         OwnWeapons = new List<string> { WeaponType.Hammer.ToString() };
         
-        WeaponEquipped = WeaponType.Hammer;
-        WeaponSkinName = "HammerSkin01";
-
-        HatEquipped = "";
-        SkinComboEquipped = "";
-        PantEquipped = "";
-        ShieldEquipped = "";
+        ResetWeaponEquipped();
+        ResetHatEquipped();
+        ResetPantEquipped();
+        ResetShieldEquipped();
+        ResetSkinComboEquipped();
         
         UseSound = true;
         UseVib = true;
@@ -53,21 +51,44 @@ public class DynamicData
 
     public bool IsUsingHat()
     {
-        return HatEquipped != "";
+        return HatEquipped != FixVariable.DEFAULT_SKINNAME;
     }
 
     public bool IsUsingShield()
     {
-        return ShieldEquipped != "";
+        return ShieldEquipped != FixVariable.DEFAULT_SKINNAME;
     }
 
     public bool IsUsingPant()
     {
-        return PantEquipped != "";
+        return PantEquipped != FixVariable.DEFAULT_SKINNAME;
     }
 
     public bool IsUsingSkinCombo()
     {
-        return SkinComboEquipped != null;
+        return SkinComboEquipped != FixVariable.DEFAULT_SKINNAME;
+    }
+
+    public void ResetWeaponEquipped()
+    {
+        WeaponEquipped = WeaponType.Hammer;
+        WeaponSkinName = "HammerSkin01";
+    }
+
+    public void ResetHatEquipped()
+    {
+        HatEquipped = FixVariable.DEFAULT_SKINNAME;
+    }
+    public void ResetPantEquipped()
+    {
+        PantEquipped = FixVariable.DEFAULT_SKINNAME;
+    }
+    public void ResetShieldEquipped()
+    {
+        ShieldEquipped = FixVariable.DEFAULT_SKINNAME;
+    }
+    public void ResetSkinComboEquipped()
+    {
+        SkinComboEquipped = FixVariable.DEFAULT_SKINNAME;
     }
 }

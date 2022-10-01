@@ -4,6 +4,9 @@ using UnityEngine;
 
 public static class FixVariable
 {
+    public const int MAX_CHARACTER_LEVEL = 4;
+    public const int CHARACTER_KILL_TO_LEVELUP = 4;
+    
     public const float CHARACTER_SPEED = 5f;
     public const float TIME_DISABLE_AFTER_CHARACTER_DIE = 1f;
     public const float AI_MINDISTANCE_TOPLAYER = 5f;
@@ -26,4 +29,8 @@ public static class FixVariable
     public const string VIB = "Vib";
     public const string SOUND = "Sound";
     public const string OPENSETTING = "OpenSetting";
+    
+    
+    //
+    public const string DEFAULT_SKINNAME = "NotEquipped";
 }
