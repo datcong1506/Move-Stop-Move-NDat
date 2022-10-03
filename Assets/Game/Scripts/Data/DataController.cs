@@ -61,7 +61,7 @@ public class DataController:MonoBehaviour
     {
         get
         {
-            return Application.persistentDataPath
+            return Application.dataPath
                    +FixVariable.DATA_PATH;
         }
     }
@@ -392,7 +392,7 @@ public class DataController:MonoBehaviour
 
     public Level GetCurrentLevel()
     {
-        return GetLevel(DynamicData.CurrentLevelIndex);
+        return GetLevel(DynamicData.CurrentLevelName);
     }
     public Level GetLevel(string name)
     {
@@ -415,7 +415,7 @@ public class DataController:MonoBehaviour
 
     public void SetLevel(string lvName)
     {
-        DynamicData.CurrentLevelIndex = lvName;
+        DynamicData.CurrentLevelName = lvName;
     }
 
     public void SetPlayerWeapon(WeaponType weaponType, string skin)

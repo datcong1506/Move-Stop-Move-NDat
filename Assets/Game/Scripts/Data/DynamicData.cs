@@ -6,7 +6,7 @@ using System;
 public class DynamicData
 {
     public int GoldCount;
-    public string CurrentLevelIndex;
+    public string CurrentLevelName;
     public int BestRank;
     public List<string> OwnHats;
     public List<string> OwnSkinCombo;
@@ -29,7 +29,7 @@ public class DynamicData
     public DynamicData()
     {
         GoldCount = 0;
-        CurrentLevelIndex = "Level1";
+        CurrentLevelName = "Level1";
         BestRank = 99999;
         
         OwnHats = new List<string>();
