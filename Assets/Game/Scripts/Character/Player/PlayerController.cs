@@ -190,6 +190,7 @@ public class PlayerController : CharacterController
     {
         base.OnCharacterKillEnemy();
         GameAudioManager.Instance.Vibrate();
+        GameManager.Instance.OnPlayerKillEnemy();
     }
 
     protected override void OnCharacterLevelUp()

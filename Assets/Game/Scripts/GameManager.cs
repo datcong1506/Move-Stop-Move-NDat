@@ -183,6 +183,7 @@ public class GameManager : Singleton<GameManager>
     private void Win()
     {
         GameState = GameState.WinState;
+        DataController.GoldCount += level.GoldLevelBonus;
         playerController.CharacterState = CharacterState.Dance;
         UIManager.Instance.LoadUI(UI.WinUI);
         GameAudioManager.Instance.PlayClip(AudioType.Win);
@@ -229,6 +230,12 @@ public class GameManager : Singleton<GameManager>
             
         }
     }
+
+    public void OnPlayerKillEnemy()
+    {
+        DataController.GoldCount += level.GoldKillBonus;
+    }
+    
 
     private void EnablePlayer()
     {

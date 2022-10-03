@@ -20,5 +20,6 @@ public class Level : ScriptableObject
             return NextLevel != null;
         }
     }
-
+    public int GoldLevelBonus;
+    public int GoldKillBonus;
 }

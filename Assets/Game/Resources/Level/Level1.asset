@@ -19,3 +19,5 @@ MonoBehaviour:
   AiPerWave: 5
   NextLevel: {fileID: 11400000, guid: 3c2b904d0e3b1bc4dbe334c37c44c3ea, type: 2}
   PlayerSpawnPosision: {x: -0.32671738, y: 11.093667, z: -0.009796143}
+  GoldLevelBonus: 200
+  GoldKillBonus: 1
