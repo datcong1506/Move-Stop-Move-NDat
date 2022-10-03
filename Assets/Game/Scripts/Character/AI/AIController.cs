@@ -54,7 +54,6 @@ public class AIController : CharacterController
 
     protected override void OnCharacterChangeState(CharacterState oldState, CharacterState newState)
     {
-        base.OnCharacterChangeState(oldState,newState);
         switch (newState)
         {
             case CharacterState.Idle:
@@ -66,6 +65,7 @@ public class AIController : CharacterController
             if (navMesh.isOnNavMesh)
             {
                 navMesh.isStopped = true;
+                navMesh.updateRotation = false;
             }
         }
         else
@@ -73,9 +73,12 @@ public class AIController : CharacterController
             if (navMesh.isOnNavMesh)
             {
                 navMesh.isStopped = false;
+                navMesh.updateRotation = true;
             }
         }
+        base.OnCharacterChangeState(oldState,newState);
     }
+    
     private IEnumerator IdleToMove()
     {
         yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 3f));

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -36,12 +37,14 @@ public abstract class CharacterController : MonoBehaviour
     [SerializeField] protected SkinnedMeshRenderer skinSkinMesh;
     [SerializeField] protected Transform shieldHolderTF;
     [Header("Weapon")] [SerializeField] protected Transform weaponHolderTF;
-    protected WeaponType equipWeaponType;
     [Header("Attack")] 
     [SerializeField]protected WeaponController weaponController;
+    [SerializeField] private LayerMask characterLayer;
     protected Dictionary<Transform,int> targets = new Dictionary<Transform, int>();
     public Vector3 target;
     [SerializeField] private int killCount;
+    private GameObject currentShield;
+    private GameObject currentHat;
     public int KillCount
     {
         get => killCount;
@@ -61,12 +64,16 @@ public abstract class CharacterController : MonoBehaviour
             OnCharacterChangeState(oldState,characterState);
         }
     }
-    private int version; // neu character nay da dc hoi sinh lai so voi lan truoc
+    
+    // NOTE:
+    //
+    private int version; 
     public int Version
     {
         get => version;
         set => version = value;
     }
+    
     protected virtual void Awake()
     {
        
@@ -141,6 +148,7 @@ public abstract class CharacterController : MonoBehaviour
         this.NavMesh.Warp(nPosision);
     }
     protected abstract WeaponController GetCharacterWeapon();
+
     protected bool CanAttack()
     {
         if (weaponController != null)
@@ -150,24 +158,28 @@ public abstract class CharacterController : MonoBehaviour
                 return false;
             }
         }
-        
-        List<Transform> removeTargets = new List<Transform>();
-        for (int i = 0; i < targets.Count; i++)
+        var selfTransform = CacheComponentManager.Instance.TFCache.Get(gameObject);
+
+        var attackRadius = selfTransform.localScale.x * 5;
+
+        var characterInArea = Physics.OverlapSphere(selfTransform.position, attackRadius, characterLayer,QueryTriggerInteraction.Collide);
+        targets.Clear();
+
+        for (int i = 0; i < characterInArea.Length; i++)
         {
-            var targetKeyValue = targets.ElementAt(i);
-            var targetController
-                = CacheComponentManager.Instance.CCCache.Get(targetKeyValue.Key.gameObject);
-            if (!targetController.IsAlive(targetKeyValue.Value))
+            
+            // Skip self
+            if (characterInArea[i].gameObject==gameObject)
             {
-                removeTargets.Add(targetKeyValue.Key);
+                continue;
+            }
+            //
+            var targetController = CacheComponentManager.Instance.CCCache.Get(characterInArea[i].gameObject);
+            if (targetController.IsAlive())
+            {
+                targets.Add(CacheComponentManager.Instance.TFCache.Get(characterInArea[i].gameObject),0);
             }
         }
-        for (int i = 0; i < removeTargets.Count; i++)
-        {
-            targets.Remove(removeTargets[i]);
-        }
-
-    
         
         if (targets.Count > 0)
         {
@@ -176,6 +188,10 @@ public abstract class CharacterController : MonoBehaviour
 
         return false;
     }
+    
+    // NOTE;
+    // Find the nearest target in area
+    //
     protected Vector3 FindNearestTarget()
     {
         float minDIs = 1000;
@@ -194,41 +210,22 @@ public abstract class CharacterController : MonoBehaviour
         }
         return tPosision;
     }
+    
+    // NOTE:
+    // This will be removed later. 
+    //
     public bool IsAlive(int ver)
     {
-        return ver==Version&&IsAlive();
+        return (ver==Version)&&IsAlive();
     }
+    // NOTE:
+    // IsCharacterAlive
+    //
     public bool IsAlive()
     {
         return gameObject.activeSelf && CharacterState != CharacterState.Die;
     }
     
-    //NOTE : use trigger enter to detect enemy maybe make bugs
-    //  case 1: DisaaleObejct doesnt send trigger exit 
-    // END
-    public void AddTarget(Transform nTarget)
-    {
-        if(nTarget.gameObject==gameObject) return;
-        if (!targets.ContainsKey(nTarget))
-        {
-            targets.Add(nTarget,CacheComponentManager.Instance.CCCache.Get(nTarget.gameObject).version);
-        }
-    }
-    //NOTE : use trigger enter to detect enemy maybe make bugs
-    //  case 1: DisaaleObejct doesnt send trigger exit 
-    // END
-    public void RemoveTarget(Transform eTarget)
-    {
-        if (this as PlayerController != null)
-        {
-            Debug.Log(gameObject.name);
-        }
-        
-        if (targets.ContainsKey(eTarget))
-        {
-            targets.Remove(eTarget);
-        }
-    }
     protected abstract void Move();
     // be called by animation Event (attack clip)
     public  void Attack()
@@ -335,9 +332,7 @@ public abstract class CharacterController : MonoBehaviour
     {
         CacheComponentManager.Instance.TFCache.Get(gameObject).localScale *= 1.1f;
     }
-
-    private GameObject currentShield;
-    private GameObject currentHat;
+    
     protected void SetHat(GameObject hatPrefab)
     {
         if (currentHat != null)
