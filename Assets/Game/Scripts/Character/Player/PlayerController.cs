@@ -16,15 +16,9 @@ public class PlayerController : CharacterController
     private float rotateSpeed;
     [SerializeField] private float rotateSmoothTime = 0.1f;
     private bool canChangeState;
-
+    //lock target Effect
     [SerializeField] private Transform lockTargetTF;
-    #region Canxoa
-
  
-
-    #endregion
-    
-    
     protected override void Awake()
     {
         base.Awake();
@@ -38,9 +32,6 @@ public class PlayerController : CharacterController
         mainCamTransform = CameraController.Instance.MainCam.transform;
         inputCanvasGO.SetActive(true);
     }
-
-   
-
     
     protected override WeaponController GetCharacterWeapon()
     {
@@ -49,7 +40,6 @@ public class PlayerController : CharacterController
             .GetComponent<WeaponController>();
         newWp.Init(gameObject,weaponHolderTF);
         return newWp;
-        return null;
     }
     protected override void DeSpawn()
     {
@@ -60,7 +50,6 @@ public class PlayerController : CharacterController
     protected override void OnCharacterChangeState(CharacterState oldState, CharacterState newState)
     {
         base.OnCharacterChangeState(oldState, newState);
-        
     }
     
 
@@ -160,7 +149,7 @@ public class PlayerController : CharacterController
             navMesh.Move(moveDirec * speed * Time.deltaTime);
         }
     }
-
+    
     protected override void UpdateUI()
     {
         base.UpdateUI();
@@ -179,7 +168,7 @@ public class PlayerController : CharacterController
             }
         }
     }
-
+    
     protected override void OnCharacterDie()
     {
         GameAudioManager.Instance.PlayClip(AudioType.CharacterDie);
@@ -196,13 +185,12 @@ public class PlayerController : CharacterController
     protected override void OnCharacterLevelUp()
     {
         base.OnCharacterLevelUp();
+        GameAudioManager.Instance.PlayClip(AudioType.SizeUp);
         CacheComponentManager.Instance
             .LevelUpEffect.Get(
                 PollingManager.Instance.InstantiateLevelUpEffect()
                 ).Init(CacheComponentManager.Instance.TFCache.Get(gameObject));
     }
-    
-
     
     private void SetPlayerSkin()
     {

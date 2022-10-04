@@ -8,12 +8,12 @@ public class CharacterAttackSphere : MonoBehaviour
     [SerializeField] private CharacterController characterController;
     protected virtual void OnTriggerEnter(Collider other)
     {
-        AddTarget(other);
+        // AddTarget(other);
     }
     
     protected virtual void OnTriggerExit(Collider other)
     {
-       RemoveTarget(other);
+       // RemoveTarget(other);
     }
 
 

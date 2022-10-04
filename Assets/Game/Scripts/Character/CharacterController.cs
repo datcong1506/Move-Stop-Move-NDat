@@ -67,6 +67,11 @@ public abstract class CharacterController : MonoBehaviour
         get => version;
         set => version = value;
     }
+    
+    
+    private GameObject currentShield;
+    private GameObject currentHat;
+    
     protected virtual void Awake()
     {
        
@@ -115,6 +120,7 @@ public abstract class CharacterController : MonoBehaviour
         CacheComponentManager.Instance.CCCache.Add(gameObject);
         weaponController = GetCharacterWeapon();
         CacheComponentManager.Instance.TFCache.Get(gameObject).localScale=Vector3.one;
+        targets.Clear();
     }
     private void OnGameChangeState(GameState oldState, GameState newState)
     {
@@ -126,6 +132,25 @@ public abstract class CharacterController : MonoBehaviour
     protected virtual void OnCharacterChangeState(CharacterState oldState,CharacterState newState)
     {
         ChangeAnimation(newState.ToString());
+        
+        // if character isnt moving, not allow update rotation
+        if (newState != CharacterState.Move)
+        {
+            if (navMesh.isOnNavMesh)
+            {
+                navMesh.isStopped = true;
+                navMesh.updateRotation = false;
+            }
+        }
+        else
+        {
+            if (navMesh.isOnNavMesh)
+            {
+                navMesh.isStopped = false;
+                navMesh.updateRotation = true;
+            }
+        }
+        
         switch (newState)
         {
             case CharacterState.Attack:
@@ -152,6 +177,7 @@ public abstract class CharacterController : MonoBehaviour
         }
         
         List<Transform> removeTargets = new List<Transform>();
+        
         for (int i = 0; i < targets.Count; i++)
         {
             var targetKeyValue = targets.ElementAt(i);
@@ -336,8 +362,6 @@ public abstract class CharacterController : MonoBehaviour
         CacheComponentManager.Instance.TFCache.Get(gameObject).localScale *= 1.1f;
     }
 
-    private GameObject currentShield;
-    private GameObject currentHat;
     protected void SetHat(GameObject hatPrefab)
     {
         if (currentHat != null)

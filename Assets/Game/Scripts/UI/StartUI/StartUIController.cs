@@ -35,7 +35,7 @@ public class StartUIController : UICanvas
         VibTrigger();
         VibTrigger();
         
-        SoundTrigger();
+        VibTrigger();
         VibTrigger();
     }
     //Call By animation Event

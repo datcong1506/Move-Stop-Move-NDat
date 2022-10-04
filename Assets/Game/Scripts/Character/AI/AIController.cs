@@ -54,28 +54,27 @@ public class AIController : CharacterController
 
     protected override void OnCharacterChangeState(CharacterState oldState, CharacterState newState)
     {
-        base.OnCharacterChangeState(oldState,newState);
         switch (newState)
         {
             case CharacterState.Idle:
                 StartCoroutine(IdleToMove());
                 break;
         }
-        if (newState != CharacterState.Move)
-        {
-            if (navMesh.isOnNavMesh)
-            {
-                navMesh.isStopped = true;
-            }
-        }
-        else
-        {
-            if (navMesh.isOnNavMesh)
-            {
-                navMesh.isStopped = false;
-            }
-        }
+        base.OnCharacterChangeState(oldState,newState);
     }
+
+   
+    
+    
+    protected override void OnCharacterDie()
+    {
+        if (IsInScreen())
+        {
+            GameAudioManager.Instance.PlayClip(AudioType.CharacterDie,0.5f);
+        }
+        base.OnCharacterDie();
+    }
+    
     private IEnumerator IdleToMove()
     {
         yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 3f));

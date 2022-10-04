@@ -31,7 +31,6 @@ public class PlayerLevelUpEffectController : MonoBehaviour
     }
 
     private void FollowPlayer(){
-        Debug.Log("wtf");
         if(_follow!=null){
             _transform.position=_follow.position;
         }

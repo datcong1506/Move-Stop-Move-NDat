@@ -52,6 +52,8 @@ public class GameManager : Singleton<GameManager>
     public CharacterPreviewController CharacterPreviewController => characterPreviewController;
     
     [SerializeField]private Level level;
+    public Level Level => level;
+
     [SerializeField]private int aiCount;
     public int AICount
     {
