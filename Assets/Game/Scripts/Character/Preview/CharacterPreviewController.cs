@@ -19,25 +19,19 @@ public class CharacterPreviewController : MonoBehaviour
     [SerializeField] protected SkinnedMeshRenderer skinSkinMesh;
     [SerializeField] protected Transform shieldHolderTF;
     [Header("Weapon")] [SerializeField] protected Transform weaponHolderTF;
-
-
     
-
     public void Init(Vector3 posission)
     {
         CameraController.Instance.SetSkinShopCam(camFollowTF,camLookAtTF);
         selfTransform.position = posission;
-        AttachWeapon();
+        SetWeapon();
         Reset();
     }
-
-    private void AttachWeapon()
+    private void SetWeapon()
     {
         var weapon = Instantiate(GameManager.Instance.DataController.GetPlayerWeapon());
         weapon.GetComponent<WeaponController>().Init(gameObject,weaponHolderTF);
     }
-    
-
     public void Reset()
     {
         var dataController = GameManager.Instance.DataController;
@@ -45,8 +39,17 @@ public class CharacterPreviewController : MonoBehaviour
         SetShield(dataController.GetPlayerShield());
         SetPant(dataController.GetPlayerPantMaterial());
         SetSkin(dataController.GetPlayerSkinMaterial());
-    }
 
+        var skinComboGO = dataController.GetPlayerSKknCombo();
+        if (skinComboGO != null)
+        {
+            var skinCombo = skinComboGO.GetComponent<SkinCombo>();
+            SetHat(skinCombo.TryGetHat());
+            SetShield(skinCombo.TryGetShield());
+            SetPant(skinCombo.TryGetPant());
+            SetSkin(skinCombo.TryGetSkin());
+        }
+    }
     public void SetCharacterSkin(SkinType skinType, string skinName)
     {
         var characterObject = GameManager.Instance.DataController.GetCharacterSkin(skinType, skinName);
@@ -59,9 +62,18 @@ public class CharacterPreviewController : MonoBehaviour
                 SetPant(characterObject
                     .GetComponent<PantInfo>().Material);
                 break;
+            case SkinType.Shield:
+                SetShield(characterObject);
+                break;
+            case SkinType.SkinCombo:
+                var skinCombo = characterObject.GetComponent<SkinCombo>();
+                SetHat(skinCombo.TryGetHat());
+                SetShield(skinCombo.TryGetShield());
+                SetPant(skinCombo.TryGetPant());
+                SetSkin(skinCombo.TryGetSkin());
+                break;
         }
     }
-
     private void SetHat(GameObject hatPrefab)
     {
         if (currentHat != null)
@@ -85,12 +97,12 @@ public class CharacterPreviewController : MonoBehaviour
     }
     private void SetShield(GameObject shieldPrefab)
     {
+        if (currentShield != null)
+        {
+            Destroy(currentShield);
+        }
         if (shieldPrefab != null)
         {
-            if (currentShield != null)
-            {
-                Destroy(currentShield);
-            }
             currentShield=Instantiate(shieldPrefab);
             currentShield.GetComponent<CharacterObjectController>().Init(shieldHolderTF);
         }

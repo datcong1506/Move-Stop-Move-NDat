@@ -199,5 +199,15 @@ public class PlayerController : CharacterController
         SetShield(dataController.GetPlayerShield());
         SetPant(dataController.GetPlayerPantMaterial());
         SetSkin(dataController.GetPlayerSkinMaterial());
+
+        var playerSkinComboGO = dataController.GetPlayerSKknCombo();
+        if (playerSkinComboGO != null)
+        {
+            var skinCombo = playerSkinComboGO.GetComponent<SkinCombo>();
+            SetHat(skinCombo.TryGetHat());
+            SetShield(skinCombo.TryGetShield());
+            SetPant(skinCombo.TryGetPant());
+            SetSkin(skinCombo.TryGetSkin());
+        }
     }
 }

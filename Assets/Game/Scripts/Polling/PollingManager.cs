@@ -80,6 +80,8 @@ public class PollingManager : Singleton<PollingManager>
         }
         return hitCharacterEffectPolling.Instantiate();
     }
+    
+    // NOTE: Instantiate a Enemy from poll
     public GameObject GetEnemy()
     {
         
@@ -98,6 +100,8 @@ public class PollingManager : Singleton<PollingManager>
         }
 
     }
+    
+    // NOTE: get bulletflying count
     public int GetBulletCount()
     {
         var bulletPoll=BulletPolling.GetPoll();
@@ -108,6 +112,8 @@ public class PollingManager : Singleton<PollingManager>
         }
         return count;
     }
+    
+    // NOTE: Disable all bullet is flying when load new level, or reset current level
     public void DisableAllBullet()
     {
         var bulletPoll=BulletPolling.GetPoll();
@@ -119,6 +125,8 @@ public class PollingManager : Singleton<PollingManager>
             }
         }
     }
+    
+    // NOTE: Disable all enemy is in active when load new level, or reset current level
     public void DisableAllEnemy()
     {
         if(enemyPolling==null) return;
@@ -127,6 +135,5 @@ public class PollingManager : Singleton<PollingManager>
         {
             enemyPolls[i].SetActive(false);
         }
-        Debug.Log(enemyPolls.Count);
     }
 }

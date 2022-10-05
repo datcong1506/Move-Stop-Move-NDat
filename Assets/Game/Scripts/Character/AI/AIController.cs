@@ -60,6 +60,22 @@ public class AIController : CharacterController
                 StartCoroutine(IdleToMove());
                 break;
         }
+        if (newState != CharacterState.Move)
+        {
+            if (navMesh.isOnNavMesh)
+            {
+                navMesh.isStopped = true;
+                navMesh.updateRotation = false;
+            }
+        }
+        else
+        {
+            if (navMesh.isOnNavMesh)
+            {
+                navMesh.isStopped = false;
+                navMesh.updateRotation = true;
+            }
+        }
         base.OnCharacterChangeState(oldState,newState);
     }
 
@@ -73,6 +89,8 @@ public class AIController : CharacterController
             GameAudioManager.Instance.PlayClip(AudioType.CharacterDie,0.5f);
         }
         base.OnCharacterDie();
+    
+        
     }
     
     private IEnumerator IdleToMove()
@@ -140,5 +158,10 @@ public class AIController : CharacterController
             return false;
         }
         return true;
+    }
+
+    private void SetAiSkin()
+    {
+        
     }
 }

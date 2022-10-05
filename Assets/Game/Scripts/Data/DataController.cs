@@ -76,6 +76,9 @@ public class DataController:MonoBehaviour
 
                 skinRef.Add(SkinType.Hat, new ItemRef<SkinInfo>("item/skin/hat"));
                 skinRef.Add(SkinType.Pant, new ItemRef<SkinInfo>("item/skin/pant"));
+                skinRef.Add(SkinType.Shield, new ItemRef<SkinInfo>("item/skin/shield"));
+                skinRef.Add(SkinType.SkinCombo, new ItemRef<SkinInfo>("item/skin/skincombo"));
+
                 // :UNDONE!!! need add more skin such as shield, skinCombo
             }
 
@@ -407,12 +410,7 @@ public class DataController:MonoBehaviour
 
         return null;
     }
-
-   
     
-    
-    
-
     public void SetLevel(string lvName)
     {
         DynamicData.CurrentLevelName = lvName;
@@ -433,13 +431,9 @@ public class DataController:MonoBehaviour
         
         return staticData.DefaultPantMaterial;
     }
-
+    
     public Material GetPlayerSkinMaterial()
     {
-        if (DynamicData.IsUsingSkinCombo())
-        {
-            return SkinRef[SkinType.SkinCombo].Item[DynamicData.PantEquipped].Material;
-        }
         return staticData.DefaultSkinMaterial;
     }
 
@@ -461,6 +455,16 @@ public class DataController:MonoBehaviour
 
         return null;
     }
+
+    public GameObject GetPlayerSKknCombo()
+    {
+        if (DynamicData.IsUsingSkinCombo())
+        {
+            return SkinRef[SkinType.SkinCombo].Item[DynamicData.SkinComboEquipped].CharacterObject;
+        }
+        return null;
+    }
+    
 
     public GameObject GetCharacterPreviewPrefab()
     {
