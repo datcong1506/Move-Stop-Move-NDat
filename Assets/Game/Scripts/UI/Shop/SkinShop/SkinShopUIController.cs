@@ -70,11 +70,13 @@ public class SkinShopUIController : UICanvas
                                         .GetComponent<ItemUIController>();
             newItemUIController.Init(this,itemHolderTransform,skinUIButtonInfo);
             skinUIs.Add(newItemUIController);
-            //
         }
+        //
         ChoseGroupEffectHandle(skinType);
+        //
         //set preview   
         GameManager.Instance.CharacterPreviewController.Reset();
+        //
         SelectSkinHandle(skinUIs[0],skinUIs[0].ItemUIButtonInfo);
     }
 

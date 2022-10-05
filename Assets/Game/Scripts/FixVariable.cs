@@ -4,8 +4,8 @@ using UnityEngine;
 
 public static class FixVariable
 {
-    public const int MAX_CHARACTER_LEVEL = 4;
-    public const int CHARACTER_KILL_TO_LEVELUP = 4;
+    public const int MAX_CHARACTER_LEVEL = 3;
+    public const int CHARACTER_KILL_TO_LEVELUP = 3;
     
     public const float CHARACTER_SPEED = 5f;
     public const float TIME_DISABLE_AFTER_CHARACTER_DIE = 1f;

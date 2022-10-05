@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public enum AudioType
@@ -12,6 +13,9 @@ public enum AudioType
     Lose,
     Win,
     Congra,
+    CountDown,
+    HammerThrow,
+    SizeUp,
 }
 
 
@@ -50,11 +54,35 @@ public class GameAudioManager : Singleton<GameAudioManager>
         }
     }
 
+
+    protected override void Awake()
+    {
+        base.Awake();
+        SceneManager.sceneLoaded += OnLoadSceneEvent;
+    }
+
+    private void OnLoadSceneEvent(Scene arg0, LoadSceneMode arg1)
+    {
+        audioSource.Stop();
+    }
+
     public void PlayClip(AudioType clipType)
     {
         if (GameManager.Instance.DataController.UseSound)
         {
             //
+            audioSource.volume = 1;
+            audioSource.Stop();
+            audioSource.PlayOneShot(AudioDic[clipType]);
+        }
+    }
+    public void PlayClip(AudioType clipType,float volume)
+    {
+        if (GameManager.Instance.DataController.UseSound)
+        {
+            //
+            audioSource.volume = volume;
+            audioSource.Stop();
             audioSource.PlayOneShot(AudioDic[clipType]);
         }
     }
@@ -66,5 +94,7 @@ public class GameAudioManager : Singleton<GameAudioManager>
             Handheld.Vibrate();
         }
     }
-
+    
+    
+    
 }

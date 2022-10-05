@@ -9,6 +9,13 @@ public class BulletHammerController : BulletController
     {
         base.Init(owner,posision, eulerAngle, scale, target);
         transform.eulerAngles = new Vector3(90, 0, 90);
+        if (CacheComponentManager.Instance.CCCache.TryGet(owner, out var t))
+        {
+            if (t as PlayerController != null)
+            {
+                GameAudioManager.Instance.PlayClip(AudioType.HammerThrow);
+            }
+        }
     }
 
     private void Update()
