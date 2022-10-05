@@ -13,7 +13,6 @@ public class PlayerLevelUpEffectController : MonoBehaviour
         _transform=transform;
         _transform.localScale = from.lossyScale;
         _follow=from;
-        Debug.Log("that la v l");
     }
 
     private void OnEnable()
@@ -36,6 +35,7 @@ public class PlayerLevelUpEffectController : MonoBehaviour
         }
     }
 
+    // NOTE: Just diable it and it will be moved to poller
     IEnumerator DestroySelf(){
         yield return new WaitForSeconds(t);
         gameObject.SetActive(false);

@@ -191,7 +191,7 @@ public class SkinShopUIController : UICanvas
         UIManager.Instance.LoadUI(UI.StartUI);
     }
     
-    // note:
+    // NOTE: Unlock by ads
     public void UnLockOneTimeButton()
     {
         var rs= GameManager.Instance.DataController.UnLockSkinOneTime(currentSkintype, currentChoseItem.ItemUIButtonInfo.SkinName);

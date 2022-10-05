@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class AIController : CharacterController
 {
@@ -25,6 +27,12 @@ public class AIController : CharacterController
         MoveHandle();
         AttackHandle();
         InDicatorHandle();
+    }
+
+    public override void Init()
+    {
+        SetAiSkin();
+        base.Init();
     }
 
     private void MoveHandle()
@@ -79,9 +87,6 @@ public class AIController : CharacterController
         base.OnCharacterChangeState(oldState,newState);
     }
 
-   
-    
-    
     protected override void OnCharacterDie()
     {
         if (IsInScreen())
@@ -106,11 +111,13 @@ public class AIController : CharacterController
     protected override WeaponController GetCharacterWeapon()
     {
         var gData = GameManager.Instance.DataController;
+        /*
+        gData.WeaponRef.
+        */
         var newWp = PollingManager.Instance.WeaponPolling.Instantiate(gData.GetPlayerWeapon())
             .GetComponent<WeaponController>();
         newWp.Init(gameObject,weaponHolderTF);
         return newWp;
-        return null;
     }
     protected override void Move()
     {
@@ -162,6 +169,40 @@ public class AIController : CharacterController
 
     private void SetAiSkin()
     {
+        var dataController = GameManager.Instance.DataController;
         
+        //SetRandom Hat
+        var useHat = UnityEngine.Random.Range(0, 2)>0?true:false;
+        if (useHat)
+        {
+            var hats = dataController.SkinRef[SkinType.Hat].Item;
+            var hatIndex = UnityEngine.Random.Range(0, hats.Count);
+            SetHat(hats.ElementAt(hatIndex).Value.CharacterObject);
+        }
+        //
+        
+        //SetRandom shield
+        var useShield = UnityEngine.Random.Range(0, 2)>0?true:false;
+        if (useShield)
+        {
+            var shields = dataController.SkinRef[SkinType.Shield].Item;
+            var shieldIndex = UnityEngine.Random.Range(0, shields.Count);
+            SetShield(shields.ElementAt(shieldIndex).Value.CharacterObject);
+        }
+        //        
+        
+        var usePant=UnityEngine.Random.Range(0, 2)>0?true:false;
+        if (usePant)
+        {
+            var pants = dataController.SkinRef[SkinType.Pant].Item;
+            var pantIndex = UnityEngine.Random.Range(0, pants.Count);
+            SetPant(pants.ElementAt(pantIndex).Value.CharacterObject.GetComponent<PantInfo>().Material);
+        }
+        
+        
+        //random skin color
+        skinSkinMesh.material.color = Random.ColorHSV();
+        //
+
     }
 }

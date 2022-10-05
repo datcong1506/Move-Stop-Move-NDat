@@ -16,6 +16,7 @@ public abstract class WeaponController : MonoBehaviour
     public GameObject Bullet => bullet;
     public void Init(GameObject owner,Transform holder)
     {
+        render.SetActive(true);
         this.owner = owner;
         selfTransform.SetParent(holder);
         selfTransform.localPosition = localOffset;

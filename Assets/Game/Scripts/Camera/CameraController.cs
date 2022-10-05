@@ -7,6 +7,16 @@ using UnityEngine.Rendering.Universal;
 public class CameraController : Singleton<CameraController>
 {
     [SerializeField] private Camera mainCamera;
+    public Camera ShopCam
+    {
+        get
+        {
+            var uACD= mainCamera.GetUniversalAdditionalCameraData();
+
+            return 
+                uACD.cameraStack[0];
+        }
+    }
     public Camera MainCam
     {
         get
@@ -16,11 +26,23 @@ public class CameraController : Singleton<CameraController>
     }
     [SerializeField] private CinemachineVirtualCamera followerCine;
     [SerializeField] private CinemachineVirtualCamera skinShopCine;
-    // public CinemachineVirtualCamera FollowerCine => followerCine;
+    [SerializeField] private CinemachineVirtualCamera initCam;
+
+
+    public void Init()
+    {
+        initCam.Priority = 11;
+        skinShopCine.Priority = 10;
+        followerCine.Priority = 9;
+    }
+    
+    
     public void SetFollowCam(Transform follow,Transform lookAt)
     {
         followerCine.Follow = follow;
         followerCine.LookAt = lookAt;
+        initCam.Follow = follow;
+        initCam.LookAt = lookAt;
     }
 
     public void AddCamOverLay(Camera cam)
@@ -45,12 +67,17 @@ public class CameraController : Singleton<CameraController>
     public void EnterSkinShop()
     {
         skinShopCine.Priority = 11;
-        followerCine.Priority = 10;
+        initCam.Priority = 10;
     }
 
     public void ExitSkinShop()
     {
         skinShopCine.Priority = 10;
-        followerCine.Priority = 11;
+        initCam.Priority = 11;
+    }
+
+    public void Play()
+    {
+        followerCine.Priority = 12;
     }
 }

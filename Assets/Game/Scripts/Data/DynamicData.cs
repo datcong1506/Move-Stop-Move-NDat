@@ -22,6 +22,8 @@ public class DynamicData
     public string WeaponSkinName;
 
 
+    public string PlayerName;
+    
     #region GameSetting
     public bool UseSound;
     public bool UseVib;
@@ -31,10 +33,13 @@ public class DynamicData
         GoldCount = 0;
         CurrentLevelName = "Level1";
         BestRank = 99999;
+
+        PlayerName = "ABI";
         
         OwnHats = new List<string>();
         OwnPants = new List<string>();
         OwnShields = new List<string>();
+        OwnSkinCombo = new List<string>();
         OwnWeaponSkins = new List<string>();
         OwnWeapons = new List<string> { WeaponType.Hammer.ToString() };
         

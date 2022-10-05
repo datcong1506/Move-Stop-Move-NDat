@@ -5,21 +5,12 @@ using UnityEngine;
 
 public class test : MonoBehaviour
 {
-   [SerializeField]private List<int> testList;
+    [SerializeField] private Material _materiall;
 
-   private void Awake()
-   {
-      testList = new List<int>();
-   }
-
-   private void Start()
-   {
-      var tl = G();
-      tl.Add(1);
-   }
-
-   public List<int> G()
-   {
-      return testList;
-   }
+    [ContextMenu("test")]
+    public void SetMat()
+    {
+        _materiall.color=Color.black;
+        
+    }
 }

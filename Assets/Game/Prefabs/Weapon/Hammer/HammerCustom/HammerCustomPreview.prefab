@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1852051036609658740}
   - component: {fileID: 1852051036609658739}
+  - component: {fileID: -8638283950538305373}
   m_Layer: 16
   m_Name: HammerCustomPreview
   m_TagString: Untagged
@@ -27,7 +28,6 @@ Transform:
   m_LocalRotation: {x: 0.31251958, y: 0.3231076, z: 0.16203989, w: 0.878451}
   m_LocalPosition: {x: 0.33257666, y: 1.1486477, z: 0.6558916}
   m_LocalScale: {x: 6112.3, y: 6112.3, z: 6112.3}
-  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3244567337332026379}
   m_Father: {fileID: 0}
@@ -49,6 +49,20 @@ MonoBehaviour:
   localEulerAngle: {x: 8, y: -36.7, z: 32.903004}
   localScale: {x: 45.6, y: 45.6, z: 45.6}
   material: {fileID: 0}
+--- !u!114 &-8638283950538305373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852051036609658741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5584b5b1afce1e94c8f022e1afa47e05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topMaterial: {fileID: 2100000, guid: cf1d360edb5842945af5370daed92106, type: 2}
+  bottomMaterial: {fileID: 2100000, guid: a148f30219c71ac448a4862c7edc0bd6, type: 2}
 --- !u!1 &3244567337332191275
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,7 +92,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1852051036609658740}
   m_RootOrder: 0
@@ -102,7 +115,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

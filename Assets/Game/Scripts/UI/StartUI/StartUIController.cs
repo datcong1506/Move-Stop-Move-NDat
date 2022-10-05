@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,7 +10,6 @@ public class StartUIController : UICanvas
     [SerializeField] private Animator selfAnimator;
     private string hideParam = "Hide";
     [SerializeField] private TextMeshProUGUI goldCountTMP;
-
     [Header("Vibrate")] 
     [SerializeField]private GameObject vibrateOn;
     [SerializeField] private GameObject vibrateOff;
@@ -18,6 +18,12 @@ public class StartUIController : UICanvas
     [SerializeField] private GameObject soundOff;
     [Header("Ads")] [SerializeField] private GameObject adsOn;
     [SerializeField] private GameObject adsOff;
+    
+    private void Update()
+    {
+        UpdateGoldCount();
+    }
+    
     public override void OnEnter()
     {
         UnHideCanvas();
@@ -30,14 +36,19 @@ public class StartUIController : UICanvas
 
     public void Init()
     {
-        goldCountTMP.text = GameManager.Instance.DataController.GoldCount.ToString();
         
-        VibTrigger();
-        VibTrigger();
+        SoundTrigger();
+        SoundTrigger();
         
         VibTrigger();
         VibTrigger();
     }
+
+    private void UpdateGoldCount()
+    {
+        goldCountTMP.text = GameManager.Instance.DataController.GoldCount.ToString();
+    }
+
     //Call By animation Event
     public void HideCanvas()
     {

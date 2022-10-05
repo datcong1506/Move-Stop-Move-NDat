@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IndicatorUIController : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class IndicatorUIController : MonoBehaviour
     [SerializeField]private CharacterController characterController;
     private Transform _transform;
     [SerializeField] private Transform _arrow;
+    [SerializeField] private Image killCountPanel;
+    [SerializeField] private Image arrowPanel;
     
     public void Init(IndicatorManager indicatorManager,CharacterController characterController)
     {
@@ -22,16 +25,19 @@ public class IndicatorUIController : MonoBehaviour
         this.characterController = characterController;
         _mainCamera = CameraController.Instance.MainCam;
         _playerTransform = GameManager.Instance.PlayerController.transform;
-        transform.localScale=Vector3.one *0.7f;
+        //0.7 is fit scale 
+        transform.localScale=Vector3.one *0.5f;
+        killCountPanel.color = characterController.SkinColor;
+        arrowPanel.color=characterController.SkinColor;
     }
 
     private void LateUpdate()
     {
         HandleBound();
+        UpdateKillCount();
     }
     private void HandleBound()
     {
-        
         var playerScreenPoint = _mainCamera.WorldToViewportPoint(_playerTransform.position);
         var enemyScreenPoint = _mainCamera.WorldToViewportPoint(_refEnemy.position);
         var direcFromPlayerToEnemy = enemyScreenPoint - playerScreenPoint;
@@ -55,18 +61,21 @@ public class IndicatorUIController : MonoBehaviour
         {
             cutEdgePointScreen.y += (Screen.height - boundHeight) / 2;
         }
-
         _transform.position = cutEdgePointScreen;
         var angle = Vector3.Angle(Vector3.right, direcFromPlayerToEnemy);
-        if (direcFromPlayerToEnemy.y < 0)
+        if (direcFromPlayerToEnemy.y <0)
         {
             angle = -angle;
         }
         var eulerAngle = new Vector3(0, 0, angle);
         _arrow.eulerAngles = eulerAngle;
 
-        //update killcount
+    }
+
+    private void UpdateKillCount()
+    {
         _killCountText.text = characterController.KillCount.ToString();
+
     }
     private Vector2 CalCutEdge(Vector3 direc, Vector3 _playerPosision)
     {

@@ -27,7 +27,6 @@ Transform:
   m_LocalRotation: {x: -0.33513698, y: 0.36392257, z: 0.5662649, w: 0.6592327}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4530458960535740108}
   m_Father: {fileID: 0}
@@ -49,7 +48,7 @@ MonoBehaviour:
   localEulerAngle: {x: 301.3484, y: 11.112218, z: 75.06768}
   localScale: {x: 1, y: 1, z: 1}
   selfTransform: {fileID: 4530458960406108174}
-  bullet: {fileID: 5953167663731528619, guid: 38a1cd73f2293b948a6c2e492147f2a4, type: 3}
+  bullet: {fileID: 6631408828649739804, guid: 94f9aea44bd4ba541a1a0eb089bbf82c, type: 3}
   reloadBulletTime: 1.5
   render: {fileID: 4530458960535740109}
 --- !u!1 &4530458960535740109
@@ -80,7 +79,6 @@ Transform:
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0.26, z: 0}
   m_LocalScale: {x: 41.690052, y: 41.690052, z: 41.690052}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4530458960406108174}
   m_RootOrder: 0
@@ -104,7 +102,6 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

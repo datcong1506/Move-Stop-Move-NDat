@@ -27,7 +27,6 @@ public enum WeaponType:int
     Hammer=1,
     Knife=2,
     TripleKnife=3,
-    Bommerang=4,
 }
 
 [Serializable]

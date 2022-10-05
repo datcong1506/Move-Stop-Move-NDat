@@ -35,6 +35,13 @@ public abstract class CharacterController : MonoBehaviour
     [Header("Skins")] [SerializeField] protected Transform hatHolderTF;
     [SerializeField] protected SkinnedMeshRenderer pantSkinMesh;
     [SerializeField] protected SkinnedMeshRenderer skinSkinMesh;
+    public Color SkinColor
+    {
+        get
+        {
+            return skinSkinMesh.material.color;
+        }
+    }
     [SerializeField] protected Transform shieldHolderTF;
     [Header("Weapon")] [SerializeField] protected Transform weaponHolderTF;
     [Header("Attack")] 
@@ -67,13 +74,6 @@ public abstract class CharacterController : MonoBehaviour
     
     // NOTE:
     //
-    private int version; 
-    public int Version
-    {
-        get => version;
-        set => version = value;
-    }
-    
     
     protected virtual void Awake()
     {
@@ -83,7 +83,6 @@ public abstract class CharacterController : MonoBehaviour
     protected virtual void OnEnable()
     {
         GameManager.Instance.GameChangeStateEvent.AddListener(OnGameChangeState);
-        Version++;
     }
 
     protected virtual void OnDisable()
@@ -103,12 +102,9 @@ public abstract class CharacterController : MonoBehaviour
     }
     protected virtual void Update()
     {
-       
-    }
-    protected void LateUpdate()
-    {
         UpdateUI();
     }
+    
     
     
     
@@ -121,9 +117,14 @@ public abstract class CharacterController : MonoBehaviour
         speed = FixVariable.CHARACTER_SPEED;
         killCount = 0;
         CacheComponentManager.Instance.CCCache.Add(gameObject);
+        if (weaponController != null)
+        {
+            weaponController.gameObject.SetActive(false);
+        }
         weaponController = GetCharacterWeapon();
         CacheComponentManager.Instance.TFCache.Get(gameObject).localScale=Vector3.one;
         targets.Clear();
+        SetCharacterNameUI(GameManager.Instance.DataController.GetPlayerName(), skinSkinMesh.material.color);
     }
     private void OnGameChangeState(GameState oldState, GameState newState)
     {
@@ -167,7 +168,15 @@ public abstract class CharacterController : MonoBehaviour
     public void SetCharacterPossision(Vector3 nPosision)
     {
         this.NavMesh.Warp(nPosision);
+        SetCharacterRotation();
     }
+
+    private void SetCharacterRotation()
+    {
+        CacheComponentManager.Instance.TFCache.Get(gameObject).rotation=Quaternion.identity;
+    }
+    
+    
     protected abstract WeaponController GetCharacterWeapon();
 
     protected bool CanAttack()
@@ -228,14 +237,6 @@ public abstract class CharacterController : MonoBehaviour
         }
         return tPosision;
     }
-    
-    // NOTE:
-    // This will be removed later. 
-    //
-    public bool IsAlive(int ver)
-    {
-        return (ver==Version)&&IsAlive();
-    }
     // NOTE:
     // IsCharacterAlive
     //
@@ -245,7 +246,8 @@ public abstract class CharacterController : MonoBehaviour
     }
     
     protected abstract void Move();
-    // be called by animation Event (attack clip)
+    
+    //NOTE: be called by animation Event (attack clip)
     public  void Attack()
     {
         if (CharacterState != CharacterState.Die
@@ -374,12 +376,12 @@ public abstract class CharacterController : MonoBehaviour
     }
     protected void SetShield(GameObject shieldPrefab)
     {
+        if (currentShield != null)
+        {
+            Destroy(currentShield);
+        }
         if (shieldPrefab != null)
         {
-            if (currentShield != null)
-            {
-                Destroy(currentShield);
-            }
             currentShield=Instantiate(shieldPrefab);
             currentShield.GetComponent<CharacterObjectController>().Init(shieldHolderTF);
         }

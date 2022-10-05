@@ -96,24 +96,18 @@ public class GameManager : Singleton<GameManager>
         PollingManager.Instance.DisableAllEnemy();
         playerController.Init();
         playerController.SetCharacterPossision(Helper.GetposisionOnNavmesh(level.PlayerSpawnPosision));
-        if (aiOnField != null)
-        {
-            for (int i = 0; i < aiOnField.Count; i++)
-            {
-                aiOnField[i].gameObject.SetActive(false);
-            }
-        }
         AICount = level.AiCount;
         aiOnField.Clear();
         SpawnAI();
         UIManager.Instance.LoadUI(UI.StartUI);
-        
+        CameraController.Instance.Init();
     }
     
     public void Play()
     {
         GameState = GameState.PlayState;
         UIManager.Instance.LoadUI(UI.PauseUI);
+        CameraController.Instance.Play();
     }
     
     public void OnCharacterDie(CharacterController characterController)

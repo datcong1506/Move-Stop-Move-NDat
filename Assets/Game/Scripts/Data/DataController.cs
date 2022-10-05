@@ -27,34 +27,34 @@ public class DataController:MonoBehaviour
     {
         get
         {
-            return dynamicData.GoldCount;
+            return DynamicData.GoldCount;
         }
         set
         {
-            dynamicData.GoldCount = value;
-            OnGoldCountChangeEvent?.Invoke(dynamicData.GoldCount);
+            DynamicData.GoldCount = value;
+            OnGoldCountChangeEvent?.Invoke(DynamicData.GoldCount);
         }
     }
     public bool UseSound
     {
         get
         {
-            return dynamicData.UseSound;
+            return DynamicData.UseSound;
         }
         set
         {
-            dynamicData.UseSound = value;
+            DynamicData.UseSound = value;
         }
     }
     public bool UseVib
     {
         get
         {
-            return dynamicData.UseVib;
+            return DynamicData.UseVib;
         }
         set
         {
-            dynamicData.UseVib = value;
+            DynamicData.UseVib = value;
         }
     }
     private string persistentPath
@@ -129,7 +129,7 @@ public class DataController:MonoBehaviour
         {
             string json = File.ReadAllText(persistentPath);
             DynamicData data = JsonUtility.FromJson<DynamicData>(json);
-            this.dynamicData = data;
+            dynamicData = data;
         }
         else
         {
@@ -138,7 +138,7 @@ public class DataController:MonoBehaviour
     }
     private void WriteData()
     {
-        File.WriteAllText(persistentPath,JsonUtility.ToJson(dynamicData));
+        File.WriteAllText(persistentPath,JsonUtility.ToJson(DynamicData));
     }
     [ContextMenu("DeleteData")]
     private void DeleteFile()
@@ -259,27 +259,29 @@ public class DataController:MonoBehaviour
         switch (skinType)
         {
             case SkinType.Hat:
-                return dynamicData.OwnHats;
+                return DynamicData.OwnHats;
             case SkinType.Pant:
-                return dynamicData.OwnPants;
+                return DynamicData.OwnPants;
             case SkinType.Shield:
-                return dynamicData.OwnShields;
+                return DynamicData.OwnShields;
             case SkinType.SkinCombo:
-                return dynamicData.OwnSkinCombo;
+                return DynamicData.OwnSkinCombo;
             default:
                 return null;
         }
     }
 
-    public bool UnLockSkin(SkinType skinType, string name)
+    public bool UnLockSkin(SkinType skinType, string skinName)
     {
         var skins = SkinRef[skinType];
-        if (skins.Item[name].Value <= dynamicData.GoldCount)
+        if (skins.Item[skinName].Value 
+            
+            <= DynamicData.GoldCount)
         {
-            dynamicData.GoldCount -= skins.Item[name].Value;
+            dynamicData.GoldCount -= skins.Item[skinName].Value;
             // UNDONE
             var ownSkins = GetOwnSkins(skinType);
-            ownSkins.Add(name);
+            ownSkins.Add(skinName);
             //
             return true;
         }
@@ -291,7 +293,7 @@ public class DataController:MonoBehaviour
     {
         var skins = SkinRef[skinType];
         var ownSkins = GetOwnSkins(skinType);
-        ownSkins.Add(name);
+        ownSkins.Add(skinName);
         skinUnlockOneTime.Add(skinType,skinName);
         //
         return true;
@@ -383,7 +385,21 @@ public class DataController:MonoBehaviour
     {
         return WeaponRef[DynamicData.WeaponEquipped].Item[DynamicData.WeaponSkinName].WorldWeapon;
     }
+
+    //NOTE: undone
+    public List<GameObject> GetPlayerOwnWeapon()
+    {
+        for (int i = 0; i < DynamicData.OwnWeapons.Count; i++)
+        {
+        }
+
+        return null;
+    }
     
+    public string GetPlayerName()
+    {
+        return DynamicData.PlayerName;
+    }
     public GameObject GetEnemyPrefab()
     {
         return staticData.EnemyPrefab;
@@ -421,7 +437,9 @@ public class DataController:MonoBehaviour
         DynamicData.WeaponEquipped = weaponType;
         DynamicData.WeaponSkinName = skin;
     }
-
+    
+    
+    
     public Material GetPlayerPantMaterial()
     {
         if (DynamicData.IsUsingPant())
@@ -470,6 +488,8 @@ public class DataController:MonoBehaviour
     {
         return staticData.CharacterPreviewPrefab;
     }
+    
+    // NOTE: Change Player Skin : Hat, shield, pant, skinColor.  change mesh undone
 
     public void SetPlayerSkin(SkinType skin, string skinName)
     {
@@ -477,15 +497,27 @@ public class DataController:MonoBehaviour
         {
             case SkinType.Hat:
                 DynamicData.HatEquipped = skinName;
+                /*
+                DynamicData.ResetSkinComboEquipped();
+                */
                 break;
             case SkinType.Pant:
                 DynamicData.PantEquipped = skinName;
+                /*
+                DynamicData.ResetSkinComboEquipped();
+                */
                 break;
             case SkinType.Shield:
                 DynamicData.ShieldEquipped = skinName;
+                /*
+                DynamicData.ResetSkinComboEquipped();
+                */
                 break;
             case SkinType.SkinCombo:
                 DynamicData.SkinComboEquipped = skinName;
+                DynamicData.ResetHatEquipped();
+                DynamicData.ResetPantEquipped();
+                DynamicData.ResetShieldEquipped();
                 break;
         }
     }
