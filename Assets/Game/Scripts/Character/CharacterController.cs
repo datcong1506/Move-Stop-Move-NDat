@@ -105,6 +105,8 @@ public abstract class CharacterController : MonoBehaviour
         {
             GameManager.Instance.GameChangeStateEvent.RemoveListener(OnGameChangeState);
         }
+        DeSpawn();
+
     }
 
     protected virtual void OnDestroy()
@@ -130,15 +132,12 @@ public abstract class CharacterController : MonoBehaviour
         CharacterState = CharacterState.Init;
         speed = FixVariable.CHARACTER_SPEED;
         killCount = 0;
+        //NOTE: Add charactercontroller to CacheComponent
         CacheComponentManager.Instance.CCCache.Add(gameObject);
-        if (weaponController != null)
-        {
-            weaponController.gameObject.SetActive(false);
-        }
+        
         weaponController = GetCharacterWeapon();
         CacheComponentManager.Instance.TFCache.Get(gameObject).localScale=Vector3.one;
         targets.Clear();
-        SetCharacterNameUI(GameManager.Instance.DataController.GetPlayerName(), skinSkinMesh.material.color);
     }
     private void OnGameChangeState(GameState oldState, GameState newState)
     {
@@ -261,8 +260,7 @@ public abstract class CharacterController : MonoBehaviour
     //NOTE: be called by animation Event (attack clip)
     public  void Attack()
     {
-        if (CharacterState != CharacterState.Die
-            && CharacterState!=CharacterState.Init)
+        if (CharacterState==CharacterState.Attack)
         {
             if (weaponController != null)
             {
@@ -307,7 +305,10 @@ public abstract class CharacterController : MonoBehaviour
 
     protected virtual void DeSpawn()
     {
-       
+        if (weaponController != null)
+        {
+            weaponController.gameObject.SetActive(false);
+        }
     }
     protected virtual void ChangeAnimation(string newParam)
     {
@@ -315,9 +316,10 @@ public abstract class CharacterController : MonoBehaviour
         currentParam = newParam;
         animator.SetTrigger(newParam);
     }
-    protected void SetCharacterNameUI(string name, Color color)
+    protected void SetCharacterNameUI(string characterName, Color color)
     {
-        characterNameText.text = name;
+        characterNameText.text = characterName;
+        characterNameText.color = color;
         killImage.color = color;
     }
     protected void UpdateKillCountUI(int killCount)
@@ -373,7 +375,7 @@ public abstract class CharacterController : MonoBehaviour
     {
         KillCount++;
         if (KillCount % FixVariable.CHARACTER_KILL_TO_LEVELUP == 0
-            &&FixVariable.MAX_CHARACTER_LEVEL*FixVariable.CHARACTER_KILL_TO_LEVELUP>=killCount)
+            &&(FixVariable.MAX_CHARACTER_LEVEL*FixVariable.CHARACTER_KILL_TO_LEVELUP>=killCount))
         {
             OnCharacterLevelUp();
         }

@@ -146,9 +146,14 @@ public class DataController:MonoBehaviour
         File.Delete(persistentPath);
     }
     #endregion
-    
-    
-    
+
+
+
+
+    public string[] GetNames()
+    {
+        return staticData.Names;
+    }
     
     
     private void OnDeSpawn()

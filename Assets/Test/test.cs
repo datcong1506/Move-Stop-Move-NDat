@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class test : MonoBehaviour
 {
-    [SerializeField] private Material _materiall;
+    [SerializeField] private GameObject kk;
 
-    [ContextMenu("test")]
-    public void SetMat()
+    [ContextMenu("Test")]
+    public void Test()
     {
-        _materiall.color=Color.black;
-        
+        Instantiate(kk);
+        Debug.Log("l");
+        Debug.Log("k");
     }
 }

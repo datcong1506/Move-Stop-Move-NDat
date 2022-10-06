@@ -29,7 +29,10 @@ public abstract class WeaponController : MonoBehaviour
     {
         IsReady = false;
         SpawnBullet(target);
-        StartCoroutine(ReloadCountDown());
+        if (gameObject.activeSelf)
+        {
+            StartCoroutine(ReloadCountDown());
+        }
     }
 
     protected abstract void SpawnBullet(Vector3 target);

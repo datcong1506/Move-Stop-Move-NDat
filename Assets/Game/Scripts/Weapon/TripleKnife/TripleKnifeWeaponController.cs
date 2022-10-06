@@ -18,7 +18,8 @@ public class TripleKnifeWeaponController : WeaponController
             ,target);
 
         var direcToTarget = target - selfTransform.position;
-        var ttDirecToTarget = new Vector3(direcToTarget.z, -direcToTarget.x);
+        // NOTE tiep tuyen
+        var ttDirecToTarget = new Vector3(direcToTarget.z, 0,-direcToTarget.x);
         
         var leftTarget = target+direcToTarget.magnitude*ttDirecToTarget.normalized*Mathf.Tan(0.2f);
         var rightTarget = target * 2 - leftTarget;

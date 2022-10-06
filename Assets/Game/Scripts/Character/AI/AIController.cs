@@ -32,6 +32,7 @@ public class AIController : CharacterController
     public override void Init()
     {
         SetAiSkin();
+        RandomName();
         base.Init();
     }
 
@@ -47,6 +48,15 @@ public class AIController : CharacterController
             
         }
     }
+
+    private void RandomName()
+    {
+        var names = GameManager.Instance.DataController.GetNames();
+        var randomIndex = UnityEngine.Random.Range(0, names.Length);
+        var randomName = names[randomIndex];
+        SetCharacterNameUI(randomName,SkinColor);
+    }
+    
     private void AttackHandle()
     {
         if (CharacterState==CharacterState.Idle
@@ -111,12 +121,10 @@ public class AIController : CharacterController
     protected override WeaponController GetCharacterWeapon()
     {
         var gData = GameManager.Instance.DataController;
-        /*
-        gData.WeaponRef.
-        */
+        //NOTE: Random weapon 
         var playerOwnWeapon = gData.GetPlayerOwnWeapon();
         var index = UnityEngine.Random.Range(0, playerOwnWeapon.Count);
-        var newWp = PollingManager.Instance.WeaponPolling.Instantiate(        gData.GetPlayerWeapon()
+        var newWp = PollingManager.Instance.WeaponPolling.Instantiate(playerOwnWeapon[index]
             )
             .GetComponent<WeaponController>();
         newWp.Init(gameObject,weaponHolderTF);

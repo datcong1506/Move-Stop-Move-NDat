@@ -28,11 +28,17 @@ public class PlayerController : CharacterController
     public override void Init()
     {
         SetPlayerSkin();
+        SetCharacterNameUI(GameManager.Instance.DataController.GetPlayerName(),SkinColor);
         base.Init();
         mainCamTransform = CameraController.Instance.MainCam.transform;
         inputCanvasGO.SetActive(true);
     }
-    
+    protected override void DeSpawn()
+    {
+        base.DeSpawn();
+        inputCanvasGO.SetActive(false);
+    }
+
     protected override WeaponController GetCharacterWeapon()
     {
         var gData = GameManager.Instance.DataController;
@@ -41,18 +47,9 @@ public class PlayerController : CharacterController
         newWp.Init(gameObject,weaponHolderTF);
         return newWp;
     }
-    protected override void DeSpawn()
-    {
-        base.DeSpawn();
-        inputCanvasGO.SetActive(false);
-    }
-
-    protected override void OnCharacterChangeState(CharacterState oldState, CharacterState newState)
-    {
-        base.OnCharacterChangeState(oldState, newState);
-    }
     
-
+    
+    
     protected override void Update()
     {
         base.Update();

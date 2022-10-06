@@ -41,7 +41,6 @@ public class ObjectPolling
         {
             var newInstance = GameObject.Instantiate(_originPool);
             newInstance.AddComponent<PollObject>().Initial(this);
-            _unAvaibaleObjects.Add(newInstance, 0);
             newInstance.SetActive(false);
             Polls.Add(newInstance);
         }
@@ -64,12 +63,23 @@ public class ObjectPolling
         {
             _unAvaibaleObjects.Remove(pollObject);
         }
+
+        if (pollObject.activeSelf)
+        {
+            pollObject.SetActive(false);
+        }
     }
 
     public void OnPollEnable(GameObject poGameObject)
     {
-        _avaiableObjects.Remove(poGameObject);
-        _unAvaibaleObjects.Add(poGameObject, 0);
+        if (_avaiableObjects.ContainsKey(poGameObject))
+        {
+            _avaiableObjects.Remove(poGameObject);
+        }
+        if (!_unAvaibaleObjects.ContainsKey(poGameObject))
+        {
+            _unAvaibaleObjects.Add(poGameObject,0);
+        }
     }
 
     public void OnPollDestroy(GameObject pollObject)
@@ -90,8 +100,6 @@ public class ObjectPolling
         
         var newInstance = GameObject.Instantiate(_originPool);
         newInstance.AddComponent<PollObject>().Initial(this);
-        newInstance.transform.SetParent(_container);
-        _unAvaibaleObjects.Add(newInstance, 0);
         polls.Add(newInstance);
         return newInstance;
     }
@@ -132,6 +140,7 @@ public class PollObject : MonoBehaviour
     public void Initial(ObjectPolling objectPolling)
     {
         _objectPolling = objectPolling;
+        _objectPolling.OnPollEnable(gameObject);
     }
 
     private void OnDisable()
@@ -168,8 +177,10 @@ public class PollObject : MonoBehaviour
     IEnumerator OnDisableDelayOneFrame()
     {
         yield return new WaitForEndOfFrame();
-        if(!gameObject.activeSelf)
-        transform.SetParent(_objectPolling._pollContainer.transform);
+        if (!gameObject.activeInHierarchy)
+        {
+            transform.SetParent(_objectPolling._pollContainer.transform);
+        }
     }
 
     private void OnDestroy()

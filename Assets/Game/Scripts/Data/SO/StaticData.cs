@@ -39,4 +39,9 @@ public class StaticData:ScriptableObject
     public Material DefaultPantMaterial => defaultPantMaterial;
     [SerializeField] private Material defaultSkinMaterial;
     public Material DefaultSkinMaterial => defaultSkinMaterial;
+
+
+
+    [SerializeField]private string[] names;
+    public string[] Names => names;
 }

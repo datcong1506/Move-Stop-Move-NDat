@@ -17,3 +17,29 @@ MonoBehaviour:
   characterPreviewPrefab: {fileID: 7707621153298791054, guid: 5c8c3b98b2a45234cb25ca6a1658ff4b, type: 3}
   defaultPantMaterial: {fileID: 2100000, guid: ff18809ae3d9a934ea0529e88b6a62c5, type: 2}
   defaultSkinMaterial: {fileID: 2100000, guid: be102c8ae8307524f9abee291d4ca41e, type: 2}
+  names:
+  - James
+  - Robert
+  - John
+  - Michael
+  - David
+  - William
+  - Richard
+  - Joseph
+  - Thomas
+  - Charles
+  - Christopher
+  - Daniel
+  - Matthew
+  - Anthony
+  - Mark
+  - Donald
+  - Steven
+  - Paul
+  - Andrew
+  - Joshua
+  - Kenneth
+  - Kevin
+  - Brian
+  - George
+  - Timothy

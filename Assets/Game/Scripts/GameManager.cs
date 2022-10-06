@@ -220,6 +220,7 @@ public class GameManager : Singleton<GameManager>
             LevelManager.Instance.UnLoadLevel(level.SceneName);
             level = level.NextLevel;
             DataController.SetLevel(level.SceneName);
+            DataController.DynamicData.BestRank = 99999;
             LevelManager.Instance.LoadLevel(level.SceneName);
         }
         else
@@ -238,7 +239,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    private void DisablePalyer()
+    private void DisablePlayer()
     {
         if (playerController != null)
         {
@@ -271,19 +272,25 @@ public class GameManager : Singleton<GameManager>
             characterPreviewController.Init(CacheComponentManager.Instance
                 .TFCache.Get(playerController.gameObject).position);
         }
+        else
+        {
+            characterPreviewController.gameObject.SetActive(true);
+            characterPreviewController.Init(CacheComponentManager.Instance
+                .TFCache.Get(playerController.gameObject).position);
+        }
     }
     
     private void DestroyCharacterPreview()
     {
         if (characterPreviewController != null)
         {
-            Destroy(characterPreviewController.gameObject);
+            characterPreviewController.gameObject.SetActive(false);
         }
     }
 
     public void EnterSkinShop()
     {
-        DisablePalyer();
+        DisablePlayer();
         SpawnCharacterPreview();
         CameraController.Instance.EnterSkinShop();
     }
@@ -297,7 +304,7 @@ public class GameManager : Singleton<GameManager>
 
     public void EnterWeaponShop()
     {
-        DisablePalyer();
+        DisablePlayer();
     }
 
     public void ExitWeaponShop()

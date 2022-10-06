@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class HammerController : WeaponController
 {
-    #region Canxoa
-    
-    
-
-    #endregion
     protected override void SpawnBullet(Vector3 target)
     {
         // var nBullet = PollingManager.Instance.GetBullet(this);
