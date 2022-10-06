@@ -24,8 +24,6 @@ public class PlayerAttackSphere : CharacterAttackSphere
         }
     }
     
-    
-    
     private void UnTransparentWall(Collider other)
     {
         if (CacheComponentManager.Instance.WallCache.TryGet(other.gameObject, out var wall))
@@ -33,5 +31,8 @@ public class PlayerAttackSphere : CharacterAttackSphere
             wall.OnPlayerExit();
         }
     }
-
+    
+    
+    
+    
 }

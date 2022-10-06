@@ -43,10 +43,12 @@ public class PauseUIController : UICanvas
 
     public void ExitButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         animator.SetBool(FixVariable.OPENSETTING,false);
     }
     public void SettingButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         animator.SetBool(FixVariable.OPENSETTING,true);
     }
 
@@ -59,10 +61,12 @@ public class PauseUIController : UICanvas
 
     public void ContinueButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         animator.SetBool(FixVariable.OPENSETTING,false);
     }
     public void SoundButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         SetSound();
     }
 
@@ -74,6 +78,7 @@ public class PauseUIController : UICanvas
 
     public void VibButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         SetVib();
     }
 

@@ -18,7 +18,7 @@ public class StartUIController : UICanvas
     [SerializeField] private GameObject soundOff;
     [Header("Ads")] [SerializeField] private GameObject adsOn;
     [SerializeField] private GameObject adsOff;
-    
+    [SerializeField] private TextMeshProUGUI rankText;
     private void Update()
     {
         UpdateGoldCount();
@@ -36,14 +36,23 @@ public class StartUIController : UICanvas
 
     public void Init()
     {
-        
         SoundTrigger();
         SoundTrigger();
         
         VibTrigger();
         VibTrigger();
+
+        SetRankText();
     }
 
+    private void SetRankText()
+    {
+        var rank = GameManager.Instance.DataController.DynamicData.BestRank > 1000
+            ? "Unknown"
+            : GameManager.Instance.DataController.DynamicData.BestRank.ToString();
+        rankText.text = GameManager.Instance.Level.name+" - Best:# "+ rank;
+    }
+    
     private void UpdateGoldCount()
     {
         goldCountTMP.text = GameManager.Instance.DataController.GoldCount.ToString();
@@ -62,6 +71,7 @@ public class StartUIController : UICanvas
     
     public void PlayButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         var gManager = GameManager.Instance;
         if (gManager != null)
         {
@@ -70,6 +80,7 @@ public class StartUIController : UICanvas
     }
     public void SkinShopButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         var uiManager = UIManager.Instance;
         if (uiManager != null)
         {
@@ -78,20 +89,24 @@ public class StartUIController : UICanvas
     }
     public void WeaponShopButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         UIManager.Instance.LoadUI(UI.WeaponShopUI);
     }
     public void AdsButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         AdsTrigger();
     }
 
     private void AdsTrigger()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         adsOff.gameObject.SetActive(adsOn.gameObject.activeSelf);
         adsOn.gameObject.SetActive(!adsOff.gameObject.activeSelf);
     }
     public void SoundButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         SoundTrigger();
     }
 
@@ -103,11 +118,13 @@ public class StartUIController : UICanvas
     }
     public void VibButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         VibTrigger();
     }
 
     private void VibTrigger()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         GameManager.Instance.DataController.UseVib = !GameManager.Instance.DataController.UseVib;
         vibrateOn.SetActive(GameManager.Instance.DataController.UseVib);
         vibrateOff.SetActive(!GameManager.Instance.DataController.UseVib);

@@ -40,7 +40,7 @@ public class DynamicData
         OwnPants = new List<string>();
         OwnShields = new List<string>();
         OwnSkinCombo = new List<string>();
-        OwnWeaponSkins = new List<string>();
+        OwnWeaponSkins = new List<string>{"HammerSkin01"};
         OwnWeapons = new List<string> { WeaponType.Hammer.ToString() };
         
         ResetWeaponEquipped();

@@ -113,7 +113,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7371b2de7be3d7f48b0d8247b1c60f5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rank: {fileID: 0}
+  rank: {fileID: 8959782182893400240}
+  killByText: {fileID: 5463520549170525429}
 --- !u!1 &3230104192430839664
 GameObject:
   m_ObjectHideFlags: 0

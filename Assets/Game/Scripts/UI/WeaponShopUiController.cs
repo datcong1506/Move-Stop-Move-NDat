@@ -30,7 +30,10 @@ public class WeaponShopUiController : UICanvas
     [SerializeField] private GameObject equippedPanel;
     [SerializeField] private GameObject selectButton;
     [SerializeField] private GameObject unlockPanel;
+    [SerializeField] private TextMeshProUGUI unLockText;
     [SerializeField] private GameObject unlockWeaponButton;
+    [SerializeField] private GameObject nextLeftButton;
+    [SerializeField] private GameObject nextRightButton;
     [Header("Runtime")]
     private GameObject currentPreview;
 
@@ -113,11 +116,13 @@ public class WeaponShopUiController : UICanvas
     }
     public void ExitButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         Exit();
     }
     // Set Player weapon 
     public void SelectButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         GameManager.Instance
             .DataController
             .SetPlayerWeapon(weaponTypes[currentWeaponTypeIndex],currentSkin.WeaponSkinButtonInfo.WeaponSkinName);
@@ -125,12 +130,14 @@ public class WeaponShopUiController : UICanvas
     }
     public void UnLockWeaponSkinOneTimeButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         GameManager.Instance.DataController.UnlockWeaponSkinOneTime(weaponTypes[currentWeaponTypeIndex],
             currentSkin.WeaponSkinButtonInfo.WeaponSkinName);
         LoadWeapon(weaponTypes[currentWeaponTypeIndex]);
     }
     public void UnlockWeaponSkinButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         // GameManager.Instance.DataController.UnLockSkin()
         GameManager.Instance.DataController.UnLockWeaponSkin(weaponTypes[currentWeaponTypeIndex],
             currentSkin.WeaponSkinButtonInfo.WeaponSkinName);
@@ -138,15 +145,18 @@ public class WeaponShopUiController : UICanvas
     }
     public void UnLockWeaponButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         GameManager.Instance.DataController.UnLockWeapon(weaponTypes[currentWeaponTypeIndex]);
         LoadWeapon(weaponTypes[currentWeaponTypeIndex]);
     }
     public void NextLeftButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         LoadWeapon(currentWeaponTypeIndex-1);
     }
     public void NextRightButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         LoadWeapon(currentWeaponTypeIndex+1);
     }
     private void UpdateActiveButtonHandle(WeaponSkinButtonInfo weaponSkinButtonInfo)
@@ -157,6 +167,19 @@ public class WeaponShopUiController : UICanvas
         unlockPanel.SetActive(false);
         unlockWeaponButton.SetActive(false);
         choseSkinMask.SetActive(false);
+        
+        nextLeftButton.SetActive(true);
+        nextRightButton.SetActive(true);
+
+        if (currentWeaponTypeIndex <= 0)
+        {
+            nextLeftButton.SetActive(false);
+        }
+
+        if (currentWeaponTypeIndex >= weaponTypes.Length - 1)
+        {
+            nextRightButton.SetActive(false);
+        }
         
         if (!GameManager.Instance.DataController.IsOwnWeapon(weaponTypes[currentWeaponTypeIndex]))
         {
@@ -178,6 +201,7 @@ public class WeaponShopUiController : UICanvas
                 else
                 {
                     unlockPanel.SetActive(true);
+                    unLockText.text = currentSkin.WeaponSkinButtonInfo.Value.ToString();
                 }
             }
         }
@@ -223,21 +247,5 @@ public class WeaponShopUiController : UICanvas
     private void UpdateGoldCount()
     {
         goldCount.text = GameManager.Instance.DataController.GoldCount.ToString();
-    }
-    
-    public void ChoseTopBodyWeaponButton()
-    {
-        Abc(currentSkin.WeaponSkinButtonInfo.PreviewPrefab.GetComponent<CustomWeapon>().TopMaterial);
-    }
-
-    public void ChoseBottomBodyWeaponButton()
-    {
-        Abc(currentSkin.WeaponSkinButtonInfo.PreviewPrefab.GetComponent<CustomWeapon>().BottomMaterial);
-    }
-
-    private void Abc(Material material)
-    {
-        choseColorPanel.SetActive(true);
-        colorPickerTriangle.SetNewColor(material.color);
     }
 }

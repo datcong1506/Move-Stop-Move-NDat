@@ -114,7 +114,10 @@ public class AIController : CharacterController
         /*
         gData.WeaponRef.
         */
-        var newWp = PollingManager.Instance.WeaponPolling.Instantiate(gData.GetPlayerWeapon())
+        var playerOwnWeapon = gData.GetPlayerOwnWeapon();
+        var index = UnityEngine.Random.Range(0, playerOwnWeapon.Count);
+        var newWp = PollingManager.Instance.WeaponPolling.Instantiate(        gData.GetPlayerWeapon()
+            )
             .GetComponent<WeaponController>();
         newWp.Init(gameObject,weaponHolderTF);
         return newWp;

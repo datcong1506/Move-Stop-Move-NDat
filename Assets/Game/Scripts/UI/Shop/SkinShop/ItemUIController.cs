@@ -52,6 +52,7 @@ public class ItemUIController:MonoBehaviour
 
     public void ChoseButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         skinShopUIController.SelectSkinHandle(this,itemUIButtonInfo);
     }
 }

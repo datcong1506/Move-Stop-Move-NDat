@@ -10,8 +10,8 @@ public static class FixVariable
     public const float CHARACTER_SPEED = 5f;
     public const float TIME_DISABLE_AFTER_CHARACTER_DIE = 1f;
     public const float AI_MINDISTANCE_TOPLAYER = 5f;
-    
-    //
+
+//
     public const float CONDICATE_PERCENT = 5f;
     
     //string

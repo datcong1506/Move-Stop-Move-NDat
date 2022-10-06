@@ -25,6 +25,13 @@ public abstract class CharacterController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI characterNameText;
     [SerializeField] private Image killImage;
     [SerializeField] private TextMeshProUGUI killCountText;
+    public string CharacterName
+    {
+        get
+        {
+            return characterNameText.text;
+        }
+    }
     [Header("Movement")]
     [SerializeField] protected float speed = FixVariable.CHARACTER_SPEED;
     [SerializeField] protected NavMeshAgent navMesh;
@@ -44,9 +51,16 @@ public abstract class CharacterController : MonoBehaviour
     }
     [SerializeField] protected Transform shieldHolderTF;
     [Header("Weapon")] [SerializeField] protected Transform weaponHolderTF;
-    [Header("Attack")] 
+    [Header("Attack")] [SerializeField] private Transform attackSphereArea;
+    [SerializeField] private SphereCollider sphereAttackCollider;
     [SerializeField]protected WeaponController weaponController;
     [SerializeField] private LayerMask characterLayer;
+    private CharacterController killBy;
+    public CharacterController KillBy
+    {
+        get { return killBy; }
+    }
+    
     protected Dictionary<Transform,int> targets = new Dictionary<Transform, int>();
     public Vector3 target;
     [SerializeField] private int killCount;
@@ -188,31 +202,28 @@ public abstract class CharacterController : MonoBehaviour
                 return false;
             }
         }
-
         var selfTransform = CacheComponentManager.Instance.TFCache.Get(gameObject);
-        var attackRadius = selfTransform.localScale.x * 5;
-        var characterInArea = Physics.OverlapSphere(selfTransform.position, attackRadius, characterLayer,QueryTriggerInteraction.Collide);
-        targets.Clear();
-        for (int i = 0; i < characterInArea.Length; i++) {
+        List<Transform> removeTargets = new List<Transform>();
+        
+        // remove target if target die, or disabling
+        for (int i = 0; i < targets.Count; i++)
+        {
             
-            // Skip self
-            if (characterInArea[i].gameObject==gameObject)
+            var targetController = CacheComponentManager.Instance.CCCache.Get(targets.ElementAt(i).Key.gameObject);
+            if (!targetController.IsAlive())
             {
-                continue;
-            }
-            //
-            var targetController = CacheComponentManager.Instance.CCCache.Get(characterInArea[i].gameObject);
-            if (targetController.IsAlive())
-            {
-                targets.Add(CacheComponentManager.Instance.TFCache.Get(characterInArea[i].gameObject),0);
+                removeTargets.Add(targets.ElementAt(i).Key);   
             }
         }
-        
+        for (int i = 0; i < removeTargets.Count; i++)
+        {
+            targets.Remove(removeTargets[i]);
+        }        
+        removeTargets.Clear();
         if (targets.Count > 0)
         {
             return true;
         }
-
         return false;
     }
     
@@ -269,10 +280,11 @@ public abstract class CharacterController : MonoBehaviour
         selfTransform.LookAt(targetPosision,Vector3.up);
     }
 
-    public virtual void OnBeHit()
+    public virtual void OnBeHit(CharacterController killer)
     {
         if (CharacterState != CharacterState.Die)
         {
+            killBy = killer;
             CharacterState = CharacterState.Die;
         }
     }
@@ -339,6 +351,24 @@ public abstract class CharacterController : MonoBehaviour
         UpdateKillCountUI(KillCount);
     }
 
+    //NOTE: Be callecd in attacksphere ontriggerstay
+    public void AddTarget(Transform characterControllerTF)
+    {
+        if(characterControllerTF.gameObject==gameObject) return;
+        
+        if (!targets.ContainsKey(characterControllerTF))
+        {
+            targets.Add(characterControllerTF,1);
+        }
+    }
+    
+    //NOTE: Be callecd in attacksphere lateupdate
+    public void RemoveTarget()
+    {
+        targets.Clear();
+    }
+    
+    
     public virtual void OnCharacterKillEnemy()
     {
         KillCount++;

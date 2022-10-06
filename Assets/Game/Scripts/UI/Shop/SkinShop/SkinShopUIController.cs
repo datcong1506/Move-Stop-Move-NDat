@@ -179,6 +179,7 @@ public class SkinShopUIController : UICanvas
     
     public void UnLockButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         var rs= GameManager.Instance.DataController.UnLockSkin(currentSkintype, currentChoseItem.ItemUIButtonInfo.SkinName);
         if (rs)
         {
@@ -188,12 +189,14 @@ public class SkinShopUIController : UICanvas
 
     public void ExitButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         UIManager.Instance.LoadUI(UI.StartUI);
     }
     
     // NOTE: Unlock by ads
     public void UnLockOneTimeButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         var rs= GameManager.Instance.DataController.UnLockSkinOneTime(currentSkintype, currentChoseItem.ItemUIButtonInfo.SkinName);
         if (rs)
         {
@@ -203,6 +206,7 @@ public class SkinShopUIController : UICanvas
 
     public void EquipButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         GameManager.Instance
             .DataController.SetPlayerSkin(currentSkintype,currentChoseItem.ItemUIButtonInfo.SkinName);
         ReLoad(currentChoseItem.ItemUIButtonInfo.SkinName);
@@ -210,6 +214,7 @@ public class SkinShopUIController : UICanvas
 
     public void UnEquipButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         GameManager.Instance
             .DataController.UnEquipPlayerSkin(currentSkintype);
         ReLoad(currentChoseItem.ItemUIButtonInfo.SkinName);
@@ -217,18 +222,22 @@ public class SkinShopUIController : UICanvas
     
     public void LoadPants()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         LoadItems(SkinType.Pant);
     }
     public void LoadShields()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         LoadItems(SkinType.Shield);
     }
     public void LoadHats()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         LoadItems(SkinType.Hat);
     }
     public void LoadSkinCombo()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         LoadItems(SkinType.SkinCombo);
     }
 }

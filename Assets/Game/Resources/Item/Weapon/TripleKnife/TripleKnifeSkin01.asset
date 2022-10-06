@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ba86f716c65bc54ca42b3b84b36959d, type: 3}
   m_Name: TripleKnifeSkin01
   m_EditorClassIdentifier: 
-  Value: 0
+  Value: 500
   WeaponSkinType: 1
   PreviewWeapon: {fileID: 6951077884346240840, guid: b12c5736643b7714e82fe42844c38518, type: 3}
   WorldWeapon: {fileID: 4530458960406108173, guid: c22aee746d70a834494d4162dd756d6e, type: 3}

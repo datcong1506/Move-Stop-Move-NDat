@@ -29,9 +29,11 @@ public class RevivalUIController : UICanvas
         StartCoroutine(CountDown());
     }
     public void ExitButton(){
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         ChoseLose();
     }
     public void FreeButton(){
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         ChoseRivival();
     }
     private void ChoseLose(){

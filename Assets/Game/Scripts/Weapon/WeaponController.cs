@@ -11,7 +11,7 @@ public abstract class WeaponController : MonoBehaviour
     [SerializeField] protected  GameObject bullet;
     [SerializeField] private float reloadBulletTime = 1.5f;
     [SerializeField] private GameObject render;
-    protected GameObject owner;
+    [SerializeField]protected GameObject owner;
     public bool IsReady { get; protected set; }
     public GameObject Bullet => bullet;
     public void Init(GameObject owner,Transform holder)
@@ -28,7 +28,6 @@ public abstract class WeaponController : MonoBehaviour
     public void Fire(Vector3 target)
     {
         IsReady = false;
-        render.SetActive(false);
         SpawnBullet(target);
         StartCoroutine(ReloadCountDown());
     }
@@ -41,6 +40,7 @@ public abstract class WeaponController : MonoBehaviour
     }
     IEnumerator ReloadCountDown()
     {
+        render.SetActive(false);
         yield return new WaitForSeconds(reloadBulletTime);
         IsReady = true;
         render.SetActive(true);

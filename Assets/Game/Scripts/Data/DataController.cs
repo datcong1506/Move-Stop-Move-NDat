@@ -315,6 +315,8 @@ public class DataController:MonoBehaviour
         {
             if (GoldCount >= WeaponRef[weaponType].Item[skinName].Value)
             {
+                Debug.Log(WeaponRef[weaponType].Item[skinName].Value);
+                GoldCount -= WeaponRef[weaponType].Item[skinName].Value;
                 DynamicData.OwnWeaponSkins.Add(skinName);
                 return true;
             }
@@ -389,11 +391,15 @@ public class DataController:MonoBehaviour
     //NOTE: undone
     public List<GameObject> GetPlayerOwnWeapon()
     {
+        List<GameObject> ownWeapon = new List<GameObject>();
         for (int i = 0; i < DynamicData.OwnWeapons.Count; i++)
         {
+            if (Enum.TryParse(DynamicData.OwnWeapons[i], out WeaponType weaponType))
+            {
+                ownWeapon.Add(WeaponRef[weaponType].Item.ElementAt(UnityEngine.Random.Range(0,WeaponRef[weaponType].Item.Count)).Value.WorldWeapon);
+            }
         }
-
-        return null;
+        return ownWeapon;
     }
     
     public string GetPlayerName()

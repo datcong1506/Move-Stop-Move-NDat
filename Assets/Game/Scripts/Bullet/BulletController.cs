@@ -65,7 +65,7 @@ public class BulletController : MonoBehaviour
                 if (characterController.IsAlive())
                 {
                     
-                    characterController.OnBeHit();
+                    characterController.OnBeHit(characterController);
                     CacheComponentManager.Instance.CCCache
                         .Get(owner.gameObject)
                         .OnCharacterKillEnemy();

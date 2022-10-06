@@ -6,9 +6,11 @@ using UnityEngine;
 public class LoseUiController : UICanvas
 {
     [SerializeField] private TextMeshProUGUI rank;
+    [SerializeField] private TextMeshProUGUI killByText;
+    
     public override void OnEnter()
     {
-        
+        Init();
     }
 
     public override void OnExit()
@@ -18,7 +20,9 @@ public class LoseUiController : UICanvas
 
     private void Init()
     {
-        rank.text = (GameManager.Instance.CharacterAliveCount+1).ToString();
+        rank.text = (GameManager.Instance.Rank).ToString();
+        killByText.text = GameManager.Instance.PlayerController.KillBy.CharacterName;
+        killByText.color = GameManager.Instance.PlayerController.SkinColor;
     }
 
     public void TryAgainButton()

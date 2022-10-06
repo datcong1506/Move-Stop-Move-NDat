@@ -36,6 +36,7 @@ public class WeaponSKinPreviewButtonController : MonoBehaviour
     
     public void ChoseButton()
     {
+        GameAudioManager.Instance.PlayClip(AudioType.Click);
         weaponShopUiController.ChoseSkin(this);
     }
 }

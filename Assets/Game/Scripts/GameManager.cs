@@ -38,8 +38,13 @@ public class GameManager : Singleton<GameManager>
             GameChangeStateEvent?.Invoke(oldState,value);
         }
     }
-    
-    [SerializeField] private PlayerController playerController;
+
+    private int rank;
+    public int Rank
+    {
+        get { return rank; }
+    }
+        [SerializeField] private PlayerController playerController;
     public PlayerController PlayerController
     {
         get
@@ -114,7 +119,8 @@ public class GameManager : Singleton<GameManager>
     {
         if (characterController as PlayerController != null)
         {
-            UIManager.Instance.LoadUI(UI.RevivalUI); 
+            rank = CharacterAliveCount;
+            UIManager.Instance.LoadUI(UI.RevivalUI);
         }
         else
         {
@@ -185,10 +191,20 @@ public class GameManager : Singleton<GameManager>
         GameAudioManager.Instance.PlayClip(AudioType.Win);
     }
 
+    public void TripleReward()
+    {
+        DataController.GoldCount += level.GoldLevelBonus*2;
+    }
+
     public void Lose()
     {
         UIManager.Instance.LoadUI(UI.LoseUI);
         GameAudioManager.Instance.PlayClip(AudioType.Lose);
+        //set rank
+        if (DataController.DynamicData.BestRank > rank)
+        {
+            DataController.DynamicData.BestRank = rank;
+        }
     }
 
     public void TryAgain()
@@ -205,6 +221,10 @@ public class GameManager : Singleton<GameManager>
             level = level.NextLevel;
             DataController.SetLevel(level.SceneName);
             LevelManager.Instance.LoadLevel(level.SceneName);
+        }
+        else
+        {
+            TryAgain();
         }
         
     }

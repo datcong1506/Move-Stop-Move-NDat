@@ -41,7 +41,6 @@ public class ObjectPolling
         {
             var newInstance = GameObject.Instantiate(_originPool);
             newInstance.AddComponent<PollObject>().Initial(this);
-            newInstance.transform.SetParent(_container);
             _unAvaibaleObjects.Add(newInstance, 0);
             newInstance.SetActive(false);
             Polls.Add(newInstance);
@@ -57,13 +56,14 @@ public class ObjectPolling
     }
     public void OnPollDisable(GameObject pollObject)
     {
-        _avaiableObjects.Add(pollObject, 0);
-        _unAvaibaleObjects.Remove(pollObject);
-        // pollObject.transform.SetParent(_container);
-        // if (pollObject.activeSelf)
-        // {
-        //     pollObject.SetActive(false);
-        // }
+        if (!_avaiableObjects.ContainsKey(pollObject))
+        {
+            _avaiableObjects.Add(pollObject, 0);
+        }
+        if (_unAvaibaleObjects.ContainsKey(pollObject))
+        {
+            _unAvaibaleObjects.Remove(pollObject);
+        }
     }
 
     public void OnPollEnable(GameObject poGameObject)
@@ -86,6 +86,8 @@ public class ObjectPolling
             instance.SetActive(true);
             return instance;
         }
+        
+        
         var newInstance = GameObject.Instantiate(_originPool);
         newInstance.AddComponent<PollObject>().Initial(this);
         newInstance.transform.SetParent(_container);
@@ -134,9 +136,6 @@ public class PollObject : MonoBehaviour
 
     private void OnDisable()
     {
-        /*
-        _objectPolling.OnPollDisable(gameObject);
-    */
         if (_objectPolling != null)
         {
             if (_objectPolling._pollContainer != null)
@@ -150,12 +149,27 @@ public class PollObject : MonoBehaviour
         }
     }
 
+
+    public void AddToPoll()
+    {
+        if (_objectPolling != null)
+        {
+            if (_objectPolling._pollContainer != null)
+            {
+                if (_objectPolling._pollContainer.gameObject.activeInHierarchy)
+                {
+                    _objectPolling.OnPollDisable(gameObject);
+                    _objectPolling._pollContainer.StartCoroutine(OnDisableDelayOneFrame());
+                }
+            }
+        }
+    }
+    
     IEnumerator OnDisableDelayOneFrame()
     {
         yield return new WaitForEndOfFrame();
         if(!gameObject.activeSelf)
         transform.SetParent(_objectPolling._pollContainer.transform);
-        // _objectPolling.OnPollDisable(gameObject);
     }
 
     private void OnDestroy()
